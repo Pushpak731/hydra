@@ -1,8 +1,8 @@
 # This workflow uploads Hydra to PyPI using Trusted Publishers.
 #
 # This is a release-branch-local copy for the EOL 1.3 branch. It intentionally
-# avoids the newer main-branch release tool configuration and builds only
-# hydra-core from this checkout.
+# avoids the newer main-branch release tool configuration and builds one
+# explicitly selected package from this checkout.
 name: Publish to PyPI
 
 on:
@@ -10,6 +10,21 @@ on:
     types: [created]
   workflow_dispatch:
     inputs:
+      package:
+        description: "Package to build and publish"
+        required: true
+        type: choice
+        default: hydra-core
+        options:
+          - hydra-core
+          - hydra-ax-sweeper
+          - hydra-colorlog
+          - hydra-joblib-launcher
+          - hydra-nevergrad-sweeper
+          - hydra-optuna-sweeper
+          - hydra-ray-launcher
+          - hydra-rq-launcher
+          - hydra-submitit-launcher
       publish:
         description: "Publish to PyPI after building artifacts"
         required: true
@@ -37,12 +52,35 @@ jobs:
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements/requirements.txt build twine
+          pip install -r requirements/requirements.txt build read-version twine wheel
+
+      - name: Select package
+        id: package
+        env:
+          PACKAGE: ${{ inputs.package || 'hydra-core' }}
+        run: |
+          case "${PACKAGE}" in
+            hydra-core) package_dir="${GITHUB_WORKSPACE}" ;;
+            hydra-ax-sweeper) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_ax_sweeper" ;;
+            hydra-colorlog) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_colorlog" ;;
+            hydra-joblib-launcher) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_joblib_launcher" ;;
+            hydra-nevergrad-sweeper) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_nevergrad_sweeper" ;;
+            hydra-optuna-sweeper) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_optuna_sweeper" ;;
+            hydra-ray-launcher) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_ray_launcher" ;;
+            hydra-rq-launcher) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_rq_launcher" ;;
+            hydra-submitit-launcher) package_dir="${GITHUB_WORKSPACE}/plugins/hydra_submitit_launcher" ;;
+            *) echo "Unsupported package: ${PACKAGE}" >&2; exit 1 ;;
+          esac
+          echo "name=${PACKAGE}" >> "${GITHUB_OUTPUT}"
+          echo "directory=${package_dir}" >> "${GITHUB_OUTPUT}"
 
       - name: Build distributions
         run: |
           rm -rf dist
-          python -m build --no-isolation --outdir dist
+          python -m build \
+            --no-isolation \
+            --outdir "${GITHUB_WORKSPACE}/dist" \
+            "${{ steps.package.outputs.directory }}"
 
       - name: Verify build artifacts
         run: |
@@ -51,6 +89,7 @@ jobs:
 
       - name: Write release summary
         env:
+          PACKAGE: ${{ steps.package.outputs.name }}
           PUBLISH_ENABLED: ${{ github.event_name == 'release' || inputs.publish == true }}
           TARGET_REPOSITORY: PyPI
         run: |
@@ -65,6 +104,7 @@ jobs:
           {
             echo "## Release summary"
             echo
+            echo "- Package: \`${PACKAGE}\`"
             echo "- Target repository: ${TARGET_REPOSITORY}"
             echo "- Mode: ${mode}"
             echo "- Trigger: ${GITHUB_EVENT_NAME}"
