@@ -1,3 +1,15 @@
+1.3.0 (2026-09-14)
+==================
+
+### Features
+
+- Add fault tolerance via `max_failure_rate` parameter ([#1513](https://github.com/facebookresearch/hydra/issues/1513))
+- Support python3.11 ([#2443](https://github.com/facebookresearch/hydra/issues/2443))
+
+### Bug Fixes
+
+- Resolve custom search-space callbacks through ``instantiate()``. ([#3411](https://github.com/facebookresearch/hydra/issues/3411))
+
 1.2.0 (2022-05-17)
 ======================
 
