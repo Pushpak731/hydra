@@ -1,3 +1,11 @@
+1.3.7 (2026-09-14)
+==================
+
+### Bug Fixes
+
+- Strengthen defense-in-depth checks for configured targets, Python runtime state,
+  process-environment mutation, and logging formatters. These checks are not a
+  complete security boundary. ([#3442](https://github.com/facebookresearch/hydra/issues/3442))
 1.3.6 (2026-08-29)
 ==================
 
