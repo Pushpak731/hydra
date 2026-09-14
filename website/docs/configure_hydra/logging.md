@@ -46,12 +46,16 @@ Python logging configuration can import and call the values of handler
 same target blocklist used by `instantiate()` to these values, including
 dynamically resolved queues, listeners, and external values.
 
+Hydra also rejects configuration-selected process-environment mutation and
+object-traversing `{`-style formatters. A configured formatter factory that
+does not return a `logging.Formatter` is ignored with a warning.
+
 Hydra does not support replacing Python's global
 `logging.config.dictConfigClass`. A custom configurator would bypass Hydra's
 target authorization. Express custom logging components in the logging
 configuration instead.
 
-The blocklist is defense in depth, not a complete security boundary. Do not
+These checks are defense in depth, not a complete security boundary. Do not
 compose logging configuration from an untrusted source.
 
 </details>
@@ -67,4 +71,3 @@ And this is what the custom logging looks like:
 $ python my_app.py 
 [INFO] - Info level message
 ```
-

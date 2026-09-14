@@ -8,6 +8,7 @@ from typing import Any, List, Optional
 import optuna
 from hydra.core.override_parser.overrides_parser import OverridesParser
 from hydra.core.plugins import Plugins
+from hydra.errors import InstantiationException
 from hydra.plugins.sweeper import Sweeper
 from hydra.test_utils.test_utils import (
     TSweepRunner,
@@ -26,7 +27,7 @@ from optuna.distributions import (
     UniformDistribution,
 )
 from optuna.samplers import RandomSampler
-from pytest import mark, warns
+from pytest import mark, raises, warns
 
 from hydra_plugins.hydra_optuna_sweeper import _impl
 from hydra_plugins.hydra_optuna_sweeper._impl import OptunaSweeperImpl
@@ -294,6 +295,34 @@ def test_optuna_custom_search_space_example(tmpdir: Path) -> None:
     )
     w = returns["best_params"]["+w"]
     assert 0 <= w <= 1
+
+
+def test_custom_search_space_is_resolved_through_instantiate() -> None:
+    def create_sweeper(custom_search_space: str) -> OptunaSweeperImpl:
+        return OptunaSweeperImpl(
+            sampler=RandomSampler(),
+            direction=Direction.minimize,
+            storage=None,
+            study_name=None,
+            n_trials=1,
+            n_jobs=1,
+            max_failure_rate=0.0,
+            search_space=None,
+            custom_search_space=custom_search_space,
+            params=None,
+        )
+
+    with raises(InstantiationException, match="os.system.*blocklisted"):
+        create_sweeper("os.system")
+
+    callback = (
+        "hydra_plugins.hydra_optuna_sweeper._impl."
+        "create_optuna_distribution_from_override"
+    )
+    sweeper = create_sweeper(callback)
+    extender = sweeper.custom_search_space_extender
+    assert isinstance(extender, partial)
+    assert extender.func is _impl.create_optuna_distribution_from_override
 
 
 @mark.parametrize(

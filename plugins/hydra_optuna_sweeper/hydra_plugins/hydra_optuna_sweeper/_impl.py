@@ -29,7 +29,7 @@ from hydra.core.override_parser.types import (
 from hydra.core.plugins import Plugins
 from hydra.plugins.sweeper import Sweeper
 from hydra.types import HydraContext, TaskFunction
-from hydra.utils import get_method
+from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 from optuna.distributions import (
     BaseDistribution,
@@ -173,7 +173,12 @@ class OptunaSweeperImpl(Sweeper):
             Callable[[DictConfig, Trial], None]
         ] = None
         if custom_search_space:
-            self.custom_search_space_extender = get_method(custom_search_space)
+            self.custom_search_space_extender = instantiate(
+                {
+                    "_target_": custom_search_space,
+                    "_partial_": True,
+                }
+            )
         self.search_space = search_space
         self.params = params
         self.job_idx: int = 0

@@ -1,0 +1,3 @@
+Strengthen defense-in-depth checks for configured targets, Python runtime state,
+process-environment mutation, and logging formatters. These checks are not a
+complete security boundary.

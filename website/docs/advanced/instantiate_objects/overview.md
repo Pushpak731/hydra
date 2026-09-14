@@ -14,6 +14,16 @@ is determined by the actual object instance.
 
 Hydra provides `hydra.utils.instantiate()` (and its alias `hydra.utils.call()`) for instantiating objects and calling functions. Prefer `instantiate` for creating objects and `call` for invoking functions.
 
+:::caution Security
+
+Hydra 1.3 applies a best-effort target blocklist to reduce common risks from
+configuration-controlled calls. This is defense in depth, not a complete
+security boundary: an installed application callable can still dispatch an
+operation that never appears as a `_target_`. Do not pass configuration from an
+untrusted source to `instantiate()` or `call()`.
+
+:::
+
 Call/instantiate supports:
 - Constructing an object by calling the `__init__` method
 - Calling functions, static functions, class methods and other callable global objects
@@ -404,6 +414,16 @@ the module `my_module.my_nested_module`, then find `my_object` inside that neste
 Hydra exposes an API allowing direct use of this dotpath lookup machinery.
 The following three functions, which can be imported from the <GithubLink to="hydra/utils.py">hydra.utils</GithubLink> module,
 accept a string-typed dotpath as an argument and return the located class/callable/object:
+
+:::warning
+
+These are low-level lookup APIs and do not apply Hydra's instantiate target
+restrictions. Their paths must be trusted and must never come from untrusted
+configuration. Use `instantiate()` for config-driven object lookup. Hydra 1.3's
+target restrictions are defense in depth, not a security boundary.
+
+:::
+
 ```python
 def get_class(path: str) -> type:
     """

@@ -2,15 +2,17 @@
 import builtins
 import contextlib
 import copy
+import inspect
 import os
 import pickle
 import re
+import sys
 import types
 import _threading_local
 from dataclasses import dataclass
 from functools import partial
 from textwrap import dedent
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple, cast
 
 from omegaconf import MISSING, DictConfig, ListConfig, MissingMandatoryValue, OmegaConf
 from pytest import fixture, mark, param, raises, warns
@@ -1665,6 +1667,203 @@ def test_blocklist_policy_sections_are_disjoint() -> None:
     )
 
 
+def test_target_policy_collections_are_immutable() -> None:
+    with raises(AttributeError):
+        target_policy.UNCONTROLLED_EXECUTION_TARGETS.add("builtins.pow")  # type: ignore[attr-defined]
+    with raises(TypeError):
+        target_policy._CALLABLE_DESCRIPTOR_BINDING_TARGETS[type] = "builtins.pow"  # type: ignore[index]
+
+
+def test_target_policy_integrity_mismatch_fails_closed(monkeypatch: Any) -> None:
+    monkeypatch.setattr(
+        target_policy,
+        "UNCONTROLLED_EXECUTION_TARGETS",
+        target_policy.UNCONTROLLED_EXECUTION_TARGETS | {"builtins.pow"},
+    )
+
+    with raises(InstantiationException, match="target policy integrity check failed"):
+        _instantiate2.instantiate({"_target_": "builtins.str", "object": "safe"})
+
+
+def test_internal_target_policy_cannot_be_selected_by_config() -> None:
+    with raises(InstantiationException, match="implementation state"):
+        _instantiate2.instantiate(
+            {"_target_": "hydra._internal.target_policy._capture_target_policy"}
+        )
+
+
+def test_discovery_cannot_return_internal_target_policy() -> None:
+    with raises(InstantiationException, match="implementation state"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "hydra.utils.get_object",
+                "path": "hydra._internal.target_policy",
+            }
+        )
+
+
+def test_config_cannot_access_existing_function_code() -> None:
+    def victim() -> str:
+        return "safe"
+
+    with raises(InstantiationException, match="implementation metadata"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.getattr",
+                "_args_": [victim, "__code__"],
+            }
+        )
+
+
+def test_config_cannot_mutate_existing_function_code() -> None:
+    def victim() -> str:
+        return "safe"
+
+    def replacement() -> str:
+        return "changed"
+
+    with raises(InstantiationException, match="cannot modify Python functions"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.setattr",
+                "_args_": [victim, "__code__", replacement.__code__],
+            }
+        )
+
+    assert victim() == "safe"
+
+
+def test_config_cannot_use_bound_function_setattr() -> None:
+    def victim(value: str = "safe") -> str:
+        return value
+
+    with raises(InstantiationException, match="cannot modify Python functions"):
+        _instantiate2.instantiate(
+            OmegaConf.create(
+                {
+                    "_target_": victim.__setattr__,
+                    "_args_": ["__defaults__", ("changed",)],
+                },
+                flags={"allow_objects": True},
+            )
+        )
+
+    assert victim() == "safe"
+
+
+@mark.parametrize("mutator", [setattr, delattr])
+def test_config_cannot_use_bound_builtin_attribute_mutator_alias(
+    mutator: Callable[..., Any], monkeypatch: Any
+) -> None:
+    def victim() -> None:
+        pass
+
+    victim.marker = "safe"  # type: ignore[attr-defined]
+    alias = types.MethodType(mutator, victim)
+    monkeypatch.setattr(
+        sys.modules[__name__], "attribute_mutator_alias", alias, raising=False
+    )
+    args = ["marker", "changed"] if mutator is setattr else ["marker"]
+
+    with raises(InstantiationException, match="cannot modify Python functions"):
+        _instantiate2.instantiate(
+            {
+                "_target_": f"{__name__}.attribute_mutator_alias",
+                "_args_": args,
+            }
+        )
+
+    assert getattr(victim, "marker") == "safe"
+
+
+@mark.parametrize("mutator", [setattr, delattr])
+def test_callable_result_cannot_return_bound_attribute_mutator_alias(
+    mutator: Callable[..., Any],
+) -> None:
+    def victim() -> None:
+        pass
+
+    alias = types.MethodType(mutator, victim)
+    config = OmegaConf.create(
+        {
+            "_target_": "builtins.dict.get",
+            "_args_": [{"mutator": alias}, "mutator"],
+            "_convert_": "all",
+        },
+        flags={"allow_objects": True},
+    )
+
+    with raises(InstantiationException, match="cannot modify Python functions"):
+        _instantiate2.instantiate(config)
+
+
+def test_builtin_setattr_and_delattr_allow_application_objects() -> None:
+    receiver = types.SimpleNamespace(marker="safe")
+
+    _instantiate2.instantiate(
+        {
+            "_target_": "builtins.setattr",
+            "_convert_": "all",
+            "_args_": [receiver, "marker", "changed"],
+        }
+    )
+    assert receiver.marker == "changed"
+
+    _instantiate2.instantiate(
+        {
+            "_target_": "builtins.delattr",
+            "_convert_": "all",
+            "_args_": [receiver, "marker"],
+        }
+    )
+    assert not hasattr(receiver, "marker")
+
+
+@mark.skipif(not hasattr(object, "__getstate__"), reason="requires Python 3.11+")
+def test_config_cannot_get_function_or_class_state() -> None:
+    with raises(InstantiationException, match="implementation metadata"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.object.__getstate__",
+                "_convert_": "all",
+                "_args_": [
+                    {
+                        "_target_": "hydra.utils.get_object",
+                        "path": "tests.instantiate.AClass",
+                    }
+                ],
+            }
+        )
+
+
+def test_application_function_named_getstate_is_allowed() -> None:
+    def __getstate__(callback: Callable[..., Any]) -> str:
+        return callback.__name__
+
+    config = OmegaConf.create(
+        {"_target_": __getstate__, "_args_": [module_function]},
+        flags={"allow_objects": True},
+    )
+
+    assert _instantiate2.instantiate(config) == "module_function"
+
+
+@mark.skipif(not hasattr(object, "__getstate__"), reason="requires Python 3.11+")
+def test_callable_result_cannot_return_getstate_method_alias() -> None:
+    alias = types.MethodType(getattr(object, "__getstate__"), module_function)
+    config = OmegaConf.create(
+        {
+            "_target_": "builtins.dict.get",
+            "_args_": [{"getstate": alias}, "getstate"],
+            "_convert_": "all",
+        },
+        flags={"allow_objects": True},
+    )
+
+    with raises(InstantiationException, match="implementation metadata"):
+        _instantiate2.instantiate(config)
+
+
 def test_getcwd_is_not_blocklisted() -> None:
     assert _instantiate2.instantiate({"_target_": "os.getcwd"}) == os.getcwd()
 
@@ -1887,8 +2086,182 @@ def test_resolved_target_aliases_are_blocklisted(
         "itertools.takewhile",
     ],
 )
-def test_non_result_lazy_callback_targets_are_not_blocklisted(target: str) -> None:
-    assert not target_policy._is_blocklisted_target(target)
+def test_lazy_callback_targets_are_blocklisted(target: str) -> None:
+    assert target_policy._is_blocklisted_target(target)
+
+
+@mark.parametrize(
+    "target",
+    [
+        "builtins.frame.clear",
+        "builtins.locals",
+        "builtins.vars",
+        "gc.get_referrers",
+        "inspect.currentframe",
+        "sys._current_frames",
+        "sys._getframe",
+        "traceback.walk_stack",
+        "traceback.walk_tb",
+    ],
+)
+def test_runtime_introspection_targets_are_blocklisted(target: str) -> None:
+    with raises(InstantiationException, match="cannot be authorized"):
+        _resolve_target(target, "")
+
+
+def test_config_cannot_return_live_code_object() -> None:
+    frame = inspect.currentframe()
+    assert frame is not None
+
+    with raises(InstantiationException, match=r"code\s+objects"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.getattr",
+                "_args_": [frame, "f_code"],
+            }
+        )
+
+
+def test_config_cannot_return_frame_locals() -> None:
+    generator = (secret for secret in ["HYDRA_FRAME_SECRET"])
+    next(generator)
+    frame = cast(Any, generator).gi_frame
+    assert frame is not None
+
+    with raises(InstantiationException, match="implementation metadata"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.getattr",
+                "_args_": [frame, "f_locals"],
+            }
+        )
+
+    generator.close()
+
+
+def test_discovery_cannot_traverse_frame_locals(monkeypatch: Any) -> None:
+    secret = "HYDRA_FRAME_SECRET"
+    frame_alias = inspect.currentframe()
+    assert frame_alias is not None
+    monkeypatch.setattr(
+        sys.modules[__name__], "frame_alias", frame_alias, raising=False
+    )
+    path = f"{__name__}.frame_alias.f_locals.__repr__"
+
+    with raises(InstantiationException, match="exposes implementation state"):
+        _instantiate2.instantiate({"_target_": path})
+
+    assert secret == "HYDRA_FRAME_SECRET"
+
+
+@mark.parametrize(
+    "target",
+    [
+        "os.putenv",
+        "os.unsetenv",
+        "posix.putenv",
+        "builtins.str.format",
+        "builtins.str.format_map",
+        "string.Formatter.format",
+    ],
+)
+def test_process_environment_and_formatting_targets_cannot_be_allowlisted(
+    target: str, monkeypatch: Any
+) -> None:
+    monkeypatch.setenv("HYDRA_INSTANTIATE_ALLOWLIST_OVERRIDE", target)
+    with raises(InstantiationException, match="cannot be authorized"):
+        _resolve_target(target, "")
+
+
+@mark.parametrize(
+    ("target", "args"),
+    [
+        (os.environ.__setitem__, ["HYDRA_13_SECURITY_TEST", "changed"]),
+        (os.environ.__setattr__, ["_data", cast(Any, os.environ)._data]),
+        (os.environ.update, [{"HYDRA_13_SECURITY_TEST": "changed"}]),
+        (os.environ.update.__call__, [{"HYDRA_13_SECURITY_TEST": "changed"}]),
+    ],
+)
+def test_config_cannot_mutate_process_environment(target: Any, args: List[Any]) -> None:
+    sentinel = "HYDRA_13_SECURITY_TEST"
+    os.environ.pop(sentinel, None)
+    with raises(InstantiationException, match="cannot modify the process environment"):
+        _instantiate2.instantiate(
+            OmegaConf.create(
+                {
+                    "_target_": target,
+                    "_args_": args,
+                },
+                flags={"allow_objects": True},
+            )
+        )
+    assert sentinel not in os.environ
+
+
+def test_call_wrapper_is_normalized_before_authorization() -> None:
+    effective, args, kwargs = target_policy._get_effective_target_invocation(
+        os.environ.update.__call__,
+        ({"name": "value"},),
+        {},
+    )
+
+    assert effective.__self__ is os.environ
+    assert effective.__name__ == "update"
+    assert args == ({"name": "value"},)
+    assert kwargs == {}
+
+
+def test_discovery_cannot_return_environment_mutator() -> None:
+    with raises(InstantiationException, match="cannot modify the process environment"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "hydra.utils.get_object",
+                "path": "os.environ.update",
+            }
+        )
+
+
+def test_callable_result_cannot_return_environment_mutator() -> None:
+    with raises(InstantiationException, match="cannot modify the process environment"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.getattr",
+                "_args_": [
+                    {
+                        "_target_": "hydra.utils.get_object",
+                        "path": "os.environ",
+                    },
+                    "update",
+                ],
+            }
+        )
+
+
+def test_callable_result_cannot_return_function_mutator() -> None:
+    with raises(InstantiationException, match="cannot modify Python functions"):
+        _instantiate2.instantiate(
+            {
+                "_target_": "builtins.getattr",
+                "_args_": [
+                    {
+                        "_target_": "hydra.utils.get_object",
+                        "path": "tests.instantiate.module_function",
+                    },
+                    "__setattr__",
+                ],
+            }
+        )
+
+
+def test_public_hydra_instantiate_alias_remains_available() -> None:
+    result = _instantiate2.instantiate(
+        {
+            "_target_": "hydra.utils.instantiate",
+            "_recursive_": False,
+            "config": {"_target_": "builtins.str", "object": "safe"},
+        }
+    )
+    assert result == "safe"
 
 
 def test_one_argument_iter_target_is_allowed() -> None:
