@@ -1,27 +1,27 @@
 {
   "generated_on": "2026-09-15",
-  "generated_at": "2026-09-15T11:42:42Z",
+  "generated_at": "2026-09-15T12:00:39Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 72,
+    "open_total": 71,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
         "count": 5,
-        "percentage": 6.9
+        "percentage": 7.0
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
-        "count": 55,
-        "percentage": 76.4
+        "count": 54,
+        "percentage": 76.1
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.3
+        "percentage": 8.5
       },
       {
         "category": "Question",
@@ -61,12 +61,12 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 71
+        "count": 70
       },
       {
         "status": "done",
         "emoji": "✅",
-        "count": 57
+        "count": 58
       }
     ]
   },
@@ -783,22 +783,6 @@
         "launchers"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3201"
-    },
-    {
-      "number": 3202,
-      "title": "Disallow parent traversal in Defaults List config groups",
-      "category": "Enhancement",
-      "category_emoji": "✨",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2026-06-08",
-      "updated": "2026-06-28",
-      "labels": [
-        "maintenance",
-        "defaults list"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3202"
     },
     {
       "number": 3203,
@@ -2106,9 +2090,32 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
+    },
+    {
+      "number": 3202,
+      "title": "Disallow parent traversal in Defaults List config groups",
+      "category": "Enhancement",
+      "category_emoji": "✨",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [],
+      "created": "2026-06-08",
+      "updated": "2026-06-28",
+      "labels": [
+        "defaults list",
+        "maintenance"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3202"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-15T12:00:39Z",
+      "kind": "closed",
+      "issue": 3202,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3202",
+      "title": "Disallow parent traversal in Defaults List config groups"
+    },
     {
       "ts": "2026-09-10T21:58:13Z",
       "kind": "new",
@@ -3689,14 +3696,6 @@
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3345",
       "title": "Remove remaining Hydra 1.1 behavior and migration artifacts",
       "detail": "linked #3341"
-    },
-    {
-      "ts": "2026-08-03T12:36:58Z",
-      "kind": "pr",
-      "issue": 3237,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3237",
-      "title": "Remove version_base",
-      "detail": "linked #3341, #3342, #3343"
     }
   ]
 }
