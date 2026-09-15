@@ -59,7 +59,7 @@
     "385": "2026-09-05",
     "753": "2026-09-05"
   },
-  "generated_at": "2026-09-15T12:00:39Z",
+  "generated_at": "2026-09-15T12:19:05Z",
   "issues": {
     "1085": {
       "category": "Enhancement",
@@ -277,9 +277,11 @@
       "labels": [
         "bug"
       ],
-      "pr_numbers": [],
+      "pr_numbers": [
+        "3447"
+      ],
       "state": "OPEN",
-      "status": "not started",
+      "status": "in progress",
       "title": "[Not sure if bug/feature] Where does submitit error output go?",
       "updated_at": "2026-09-11T22:36:52Z"
     },

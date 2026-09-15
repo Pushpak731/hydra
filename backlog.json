@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-15",
-  "generated_at": "2026-09-15T12:00:39Z",
+  "generated_at": "2026-09-15T12:19:05Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 71,
@@ -46,7 +46,7 @@
       {
         "status": "in progress",
         "emoji": "🔄",
-        "count": 0
+        "count": 1
       },
       {
         "status": "community PR",
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 70
+        "count": 69
       },
       {
         "status": "done",
@@ -71,6 +71,26 @@
     ]
   },
   "issues": [
+    {
+      "number": 2664,
+      "title": "[Not sure if bug/feature] Where does submitit error output go?",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "in progress",
+      "status_emoji": "🔄",
+      "prs": [
+        {
+          "number": 3447,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"
+        }
+      ],
+      "created": "2023-05-16",
+      "updated": "2026-09-11",
+      "labels": [
+        "bug"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/2664"
+    },
     {
       "number": 3375,
       "title": "Show project homepages in the Hydra Landscape",
@@ -508,21 +528,6 @@
         "enhancement"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/2453"
-    },
-    {
-      "number": 2664,
-      "title": "[Not sure if bug/feature] Where does submitit error output go?",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2023-05-16",
-      "updated": "2026-09-11",
-      "labels": [
-        "bug"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/2664"
     },
     {
       "number": 2758,
@@ -1792,6 +1797,22 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3064"
     },
     {
+      "number": 3202,
+      "title": "Disallow parent traversal in Defaults List config groups",
+      "category": "Enhancement",
+      "category_emoji": "✨",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [],
+      "created": "2026-06-08",
+      "updated": "2026-06-28",
+      "labels": [
+        "defaults list",
+        "maintenance"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3202"
+    },
+    {
       "number": 3369,
       "title": "Remove redundant setup-xcode step from macOS CI",
       "category": "Refactor",
@@ -2090,25 +2111,29 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
-    },
-    {
-      "number": 3202,
-      "title": "Disallow parent traversal in Defaults List config groups",
-      "category": "Enhancement",
-      "category_emoji": "✨",
-      "status": "done",
-      "status_emoji": "✅",
-      "prs": [],
-      "created": "2026-06-08",
-      "updated": "2026-06-28",
-      "labels": [
-        "defaults list",
-        "maintenance"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3202"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-15T12:19:05Z",
+      "kind": "pr",
+      "issue": 2664,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664",
+      "title": "[Not sure if bug/feature] Where does submitit error output go?",
+      "detail": "linked #3447"
+    },
+    {
+      "ts": "2026-09-15T12:19:05Z",
+      "kind": "status",
+      "issue": 2664,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664",
+      "title": "[Not sure if bug/feature] Where does submitit error output go?",
+      "detail": "not started → in progress",
+      "pr": {
+        "number": 3447,
+        "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"
+      }
+    },
     {
       "ts": "2026-09-15T12:00:39Z",
       "kind": "closed",
@@ -3676,26 +3701,6 @@
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3346",
       "title": "Remove remaining Hydra 1.2 behavior and migration artifacts",
       "detail": "linked #3342"
-    },
-    {
-      "ts": "2026-08-03T14:40:31Z",
-      "kind": "status",
-      "issue": 3346,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3346",
-      "title": "Remove remaining Hydra 1.2 behavior and migration artifacts",
-      "detail": "not started → in progress",
-      "pr": {
-        "number": 3342,
-        "url": "https://github.com/facebookresearch/hydra/pull/3342"
-      }
-    },
-    {
-      "ts": "2026-08-03T12:36:58Z",
-      "kind": "pr",
-      "issue": 3345,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3345",
-      "title": "Remove remaining Hydra 1.1 behavior and migration artifacts",
-      "detail": "linked #3341"
     }
   ]
 }

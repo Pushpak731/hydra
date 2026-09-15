@@ -819,3 +819,5 @@
 {"ts": "2026-09-10T15:50:16Z", "kind": "new", "issue": 3444, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3444", "title": "Include ANTLR license with the build JAR in Hydra 1.4 sdists"}
 {"ts": "2026-09-10T21:58:13Z", "kind": "new", "issue": 3445, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3445", "title": "Reach and enforce 100% public type coverage"}
 {"ts": "2026-09-15T12:00:39Z", "kind": "closed", "issue": 3202, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3202", "title": "Disallow parent traversal in Defaults List config groups"}
+{"ts": "2026-09-15T12:19:05Z", "kind": "status", "issue": 2664, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664", "title": "[Not sure if bug/feature] Where does submitit error output go?", "detail": "not started → in progress", "pr": {"number": 3447, "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"}}
+{"ts": "2026-09-15T12:19:05Z", "kind": "pr", "issue": 2664, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664", "title": "[Not sure if bug/feature] Where does submitit error output go?", "detail": "linked #3447"}
