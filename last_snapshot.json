@@ -61,7 +61,7 @@
     "385": "2026-09-05",
     "753": "2026-09-05"
   },
-  "generated_at": "2026-09-16T20:28:27Z",
+  "generated_at": "2026-09-16T21:42:00Z",
   "issues": {
     "1085": {
       "category": "Enhancement",
@@ -243,11 +243,13 @@
         "plugin",
         "sweep"
       ],
-      "pr_numbers": [],
+      "pr_numbers": [
+        "3451"
+      ],
       "state": "OPEN",
-      "status": "not started",
+      "status": "community PR",
       "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value",
-      "updated_at": "2026-09-11T22:39:02Z"
+      "updated_at": "2026-09-16T21:27:29Z"
     },
     "2412": {
       "category": "Enhancement",
@@ -752,9 +754,11 @@
       "labels": [
         "documentation"
       ],
-      "pr_numbers": [],
+      "pr_numbers": [
+        "3452"
+      ],
       "state": "OPEN",
-      "status": "not started",
+      "status": "in progress",
       "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
       "updated_at": "2026-08-23T21:52:00Z"
     },
