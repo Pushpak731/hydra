@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-16",
-  "generated_at": "2026-09-16T09:02:29Z",
+  "generated_at": "2026-09-16T09:35:49Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 70,
@@ -1030,6 +1030,19 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3364"
     },
     {
+      "number": 3375,
+      "title": "Show project homepages in the Hydra Landscape",
+      "category": "Enhancement",
+      "category_emoji": "✨",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-08-11",
+      "updated": "2026-08-11",
+      "labels": [],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3375"
+    },
+    {
       "number": 3401,
       "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
       "category": "Refactor",
@@ -1156,19 +1169,6 @@
       "updated": "2026-09-10",
       "labels": [],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3445"
-    },
-    {
-      "number": 3375,
-      "title": "Show project homepages in the Hydra Landscape",
-      "category": "Enhancement",
-      "category_emoji": "✨",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2026-08-11",
-      "updated": "2026-08-11",
-      "labels": [],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3375"
     },
     {
       "number": 385,
