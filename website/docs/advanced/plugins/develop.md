@@ -85,3 +85,6 @@ Installed Hydra Plugins
 - *[Optional]* Embed the plugin in your existing application or library. An
   entry-point plugin can use any importable package name.
 - Hack on your plugin, Ensure that the recommended tests and any tests you want to add are passing.
+
+For a `SearchPathPlugin` that provides organization-specific Hydra defaults,
+see [Environment-specific overrides](../../patterns/environment_specific_overrides.md).

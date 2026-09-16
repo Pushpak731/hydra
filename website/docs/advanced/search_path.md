@@ -163,3 +163,5 @@ See this [page](hydra-command-line-flags.md) for more info.
 Framework authors may want to add their configs to the search path automatically once their package is installed,
 eliminating the need for any actions from the users.
 This can be achieved using a `SearchPathPlugin`. Check the example plugin linked above for more details.
+For an organization-wide override of Hydra's own defaults, see
+[Environment-specific overrides](../patterns/environment_specific_overrides.md).
