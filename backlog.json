@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-16",
-  "generated_at": "2026-09-16T07:16:04Z",
+  "generated_at": "2026-09-16T07:16:26Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 70,
@@ -1239,6 +1239,26 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/1602"
     },
     {
+      "number": 2664,
+      "title": "[Not sure if bug/feature] Where does submitit error output go?",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [
+        {
+          "number": 3447,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"
+        }
+      ],
+      "created": "2023-05-16",
+      "updated": "2026-09-11",
+      "labels": [
+        "bug"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/2664"
+    },
+    {
       "number": 2757,
       "title": "[Bug] Submitit Local Launcher does not share jobs across GPUs",
       "category": "Bug",
@@ -2091,26 +2111,6 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
-    },
-    {
-      "number": 2664,
-      "title": "[Not sure if bug/feature] Where does submitit error output go?",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "done",
-      "status_emoji": "✅",
-      "prs": [
-        {
-          "number": 3447,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"
-        }
-      ],
-      "created": "2023-05-16",
-      "updated": "2026-09-11",
-      "labels": [
-        "bug"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/2664"
     }
   ],
   "updates": [
