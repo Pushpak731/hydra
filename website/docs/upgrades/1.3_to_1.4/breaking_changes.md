@@ -80,6 +80,9 @@ have been removed:
   [Instantiate resolution and call-site overrides](/docs/upgrades/1.3_to_1.4/instantiate_resolution).
 - Launcher and sweeper plugin configurations are instantiated
   non-recursively.
+- Entry points are the preferred plugin discovery mechanism. Legacy
+  `hydra_plugins` namespace scanning remains available in 1.4 but is
+  deprecated. See [Plugin discovery with entry points](/docs/upgrades/1.3_to_1.4/plugin_discovery).
 - Some security-sensitive modules can no longer be instantiated by default.
   This restriction is not a security boundary; do not rely on it to make
   untrusted configurations safe.

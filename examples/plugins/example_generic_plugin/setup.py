@@ -15,6 +15,11 @@ with open("README.md") as fh:
         url="https://github.com/hydra-ecosystem/hydra/",
         license="MIT",
         packages=find_namespace_packages(include=["hydra_plugins.*"]),
+        entry_points={
+            "hydra.plugins": [
+                "example_generic = hydra_plugins.example_generic_plugin.example_plugin:ExamplePlugin"
+            ]
+        },
         classifiers=[
             # Hydra uses Python version and Operating system to determine
             # In which environments to test this plugin

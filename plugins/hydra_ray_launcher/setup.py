@@ -15,6 +15,12 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/hydra-ecosystem/hydra/",
     packages=find_namespace_packages(include=["hydra_plugins.*"]),
+    entry_points={
+        "hydra.plugins": [
+            "ray = hydra_plugins.hydra_ray_launcher.ray_launcher:RayLauncher",
+            "ray_aws = hydra_plugins.hydra_ray_launcher.ray_aws_launcher:RayAWSLauncher",
+        ]
+    },
     classifiers=[
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

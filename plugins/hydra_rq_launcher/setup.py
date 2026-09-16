@@ -16,6 +16,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/hydra-ecosystem/hydra/",
     packages=find_namespace_packages(include=["hydra_plugins.*"]),
+    entry_points={
+        "hydra.plugins": ["rq = hydra_plugins.hydra_rq_launcher.rq_launcher:RQLauncher"]
+    },
     classifiers=[
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

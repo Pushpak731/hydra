@@ -1,13 +1,15 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+import importlib
 import sys
 import types
-from typing import List, Sequence, Type
+import warnings
+from typing import Any, List, Sequence, Type
 
 from omegaconf import DictConfig, OmegaConf
-from pytest import MonkeyPatch, mark, raises
+from pytest import MonkeyPatch, mark, raises, warns
 
 from hydra.core.config_search_path import ConfigSearchPath
-from hydra.core.plugins import Plugins
+from hydra.core.plugins import Plugins, _warn_unenumerable_editable_namespace
 from hydra.core.utils import JobReturn
 from hydra.plugins.launcher import Launcher
 from hydra.plugins.plugin import Plugin
@@ -33,7 +35,8 @@ class PluginWithNestedTarget(Launcher):
         hydra_context: HydraContext,
         task_function: TaskFunction,
         config: DictConfig,
-    ) -> None: ...
+    ) -> None:
+        pass
 
     def launch(
         self, job_overrides: Sequence[Sequence[str]], initial_job_idx: int
@@ -42,6 +45,24 @@ class PluginWithNestedTarget(Launcher):
 
 
 PluginWithNestedTarget.__module__ = "hydra._internal.core_plugins.test_plugin"
+
+
+class ExternalLauncher(PluginWithNestedTarget):
+    pass
+
+
+class ExternalSweeper(Sweeper):
+    def setup(
+        self,
+        *,
+        hydra_context: HydraContext,
+        task_function: TaskFunction,
+        config: DictConfig,
+    ) -> None:
+        pass
+
+    def sweep(self, arguments: Sequence[str]) -> Any:
+        return []
 
 
 @mark.parametrize(
@@ -76,6 +97,153 @@ def test_register_bad_plugin() -> None:
 
     with raises(ValueError, match="Not a valid Hydra Plugin"):
         Plugins.instance().register(NotAPlugin)  # type: ignore
+
+
+def test_entry_point_plugin_discovery(
+    monkeypatch: MonkeyPatch, hydra_restore_singletons: Any
+) -> None:
+    original_import_module = importlib.import_module
+
+    def import_module(name: str) -> Any:
+        if name == "hydra_plugins":
+            raise ImportError(name)
+        return original_import_module(name)
+
+    class EntryPoint:
+        name = "external"
+
+        def load(self) -> Type[ExternalLauncher]:
+            return ExternalLauncher
+
+    with monkeypatch.context() as patch:
+        patch.setattr("hydra.core.plugins.importlib.import_module", import_module)
+        patch.setattr("hydra.core.plugins.entry_points", lambda group: [EntryPoint()])
+        Plugins.instance()._initialize()
+        assert ExternalLauncher in Plugins.instance().discover(Launcher)
+        stats = Plugins.instance().get_stats()
+        assert stats is not None
+        assert "entry point: external" in stats.modules_import_time
+        assert stats.total_time >= stats.total_modules_import_time
+
+
+@mark.parametrize("error_type", [AttributeError, RuntimeError])
+def test_bad_entry_point_does_not_stop_discovery(
+    monkeypatch: MonkeyPatch,
+    hydra_restore_singletons: Any,
+    error_type: Type[Exception],
+) -> None:
+    original_import_module = importlib.import_module
+
+    def import_module(name: str) -> Any:
+        if name == "hydra_plugins":
+            raise ImportError(name)
+        return original_import_module(name)
+
+    class MissingEntryPoint:
+        name = "missing"
+
+        def load(self) -> None:
+            raise error_type("plugin could not load")
+
+    class ValidEntryPoint:
+        name = "valid"
+
+        def load(self) -> Type[ExternalLauncher]:
+            return ExternalLauncher
+
+    with monkeypatch.context() as patch:
+        patch.setattr("hydra.core.plugins.importlib.import_module", import_module)
+        patch.setattr(
+            "hydra.core.plugins.entry_points",
+            lambda group: [MissingEntryPoint(), ValidEntryPoint()],
+        )
+        with warns(UserWarning, match="entry point 'missing'"):
+            Plugins.instance()._initialize()
+        assert ExternalLauncher in Plugins.instance().discover(Launcher)
+        stats = Plugins.instance().get_stats()
+        assert stats is not None
+        assert "entry point: missing" in stats.modules_import_time
+
+
+def test_editable_namespace_without_enumerable_plugins_warns() -> None:
+    with warns(UserWarning, match="editable hydra_plugins namespace install"):
+        _warn_unenumerable_editable_namespace(
+            ["__editable__.example-1.0.finder.__path_hook__"], []
+        )
+
+
+def test_unrelated_entry_point_does_not_hide_editable_warning(
+    monkeypatch: MonkeyPatch, hydra_restore_singletons: Any
+) -> None:
+    original_import_module = importlib.import_module
+    namespace = types.SimpleNamespace(
+        __name__="hydra_plugins",
+        __path__=["__editable__.legacy_plugin-1.0.finder.__path_hook__"],
+    )
+
+    def import_module(name: str) -> Any:
+        if name == "hydra_plugins":
+            return namespace
+        return original_import_module(name)
+
+    class EntryPoint:
+        name = "external"
+        dist = types.SimpleNamespace(name="another-plugin")
+
+        def load(self) -> Type[ExternalLauncher]:
+            return ExternalLauncher
+
+    with monkeypatch.context() as patch:
+        patch.setattr("hydra.core.plugins.importlib.import_module", import_module)
+        patch.setattr("hydra.core.plugins.entry_points", lambda group: [EntryPoint()])
+        with warns(UserWarning, match="editable hydra_plugins namespace install"):
+            Plugins.instance()._initialize()
+
+
+def test_matching_entry_point_covers_editable_namespace() -> None:
+    entry_point = types.SimpleNamespace(
+        dist=types.SimpleNamespace(name="legacy-plugin")
+    )
+    with warnings.catch_warnings(record=True) as recorded:
+        _warn_unenumerable_editable_namespace(
+            ["__editable__.legacy_plugin-1.0.finder.__path_hook__"], [entry_point]
+        )
+    assert recorded == []
+
+
+def test_registered_plugins_outside_hydra_namespace(
+    hydra_restore_singletons: Any,
+) -> None:
+    plugins = Plugins.instance()
+    plugins.register(ExternalLauncher)
+    plugins.register(ExternalSweeper)
+
+    launcher = plugins._instantiate(
+        OmegaConf.create(
+            {
+                "_target_": f"{ExternalLauncher.__module__}.{ExternalLauncher.__qualname__}",
+                "nested": {},
+            }
+        )
+    )
+    sweeper = plugins._instantiate(
+        OmegaConf.create(
+            {"_target_": f"{ExternalSweeper.__module__}.{ExternalSweeper.__qualname__}"}
+        )
+    )
+    assert isinstance(launcher, ExternalLauncher)
+    assert isinstance(sweeper, ExternalSweeper)
+
+
+def test_unregistered_plugin_is_rejected(hydra_restore_singletons: Any) -> None:
+    with raises(RuntimeError, match="Unknown plugin class"):
+        Plugins.instance()._instantiate(
+            OmegaConf.create(
+                {
+                    "_target_": f"{ExternalLauncher.__module__}.{ExternalLauncher.__qualname__}"
+                }
+            )
+        )
 
 
 def test_plugin_instantiation_is_not_recursive(monkeypatch: MonkeyPatch) -> None:

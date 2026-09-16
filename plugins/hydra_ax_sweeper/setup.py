@@ -16,6 +16,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/hydra-ecosystem/hydra/",
     packages=find_namespace_packages(include=["hydra_plugins.*"]),
+    entry_points={
+        "hydra.plugins": ["ax = hydra_plugins.hydra_ax_sweeper.ax_sweeper:AxSweeper"]
+    },
     classifiers=[
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",

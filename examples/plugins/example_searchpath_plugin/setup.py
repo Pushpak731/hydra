@@ -16,6 +16,12 @@ with open("README.md") as fh:
         license="MIT",
         packages=find_namespace_packages(include=["hydra_plugins.*"])
         + find_packages(include=["arbitrary_package.*"]),
+        entry_points={
+            "hydra.plugins": [
+                "example_searchpath = hydra_plugins.example_searchpath_plugin."
+                "example_searchpath_plugin:ExampleSearchPathPlugin"
+            ]
+        },
         classifiers=[
             # Hydra uses Python version and Operating system to determine
             # In which environments to test this plugin
