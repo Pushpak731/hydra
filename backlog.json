@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-16",
-  "generated_at": "2026-09-16T07:16:26Z",
+  "generated_at": "2026-09-16T09:02:29Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 70,
@@ -51,7 +51,7 @@
       {
         "status": "community PR",
         "emoji": "🤝",
-        "count": 1
+        "count": 0
       },
       {
         "status": "blocked",
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 69
+        "count": 70
       },
       {
         "status": "done",
@@ -71,24 +71,6 @@
     ]
   },
   "issues": [
-    {
-      "number": 3375,
-      "title": "Show project homepages in the Hydra Landscape",
-      "category": "Enhancement",
-      "category_emoji": "✨",
-      "status": "community PR",
-      "status_emoji": "🤝",
-      "prs": [
-        {
-          "number": 3381,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3381"
-        }
-      ],
-      "created": "2026-08-11",
-      "updated": "2026-08-11",
-      "labels": [],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3375"
-    },
     {
       "number": 468,
       "title": "Specify the schema for returning the result of optimization.",
@@ -1176,6 +1158,19 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3445"
     },
     {
+      "number": 3375,
+      "title": "Show project homepages in the Hydra Landscape",
+      "category": "Enhancement",
+      "category_emoji": "✨",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-08-11",
+      "updated": "2026-08-11",
+      "labels": [],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3375"
+    },
+    {
       "number": 385,
       "title": "Experimentation tracking support",
       "category": "Enhancement",
@@ -2114,6 +2109,22 @@
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-16T09:02:29Z",
+      "kind": "pr",
+      "issue": 3375,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3375",
+      "title": "Show project homepages in the Hydra Landscape",
+      "detail": "unlinked #3381"
+    },
+    {
+      "ts": "2026-09-16T09:02:29Z",
+      "kind": "status",
+      "issue": 3375,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3375",
+      "title": "Show project homepages in the Hydra Landscape",
+      "detail": "community PR → not started"
+    },
     {
       "ts": "2026-09-16T07:16:04Z",
       "kind": "closed",
@@ -3681,25 +3692,6 @@
       "issue": 3345,
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3345",
       "title": "Remove remaining Hydra 1.1 behavior and migration artifacts"
-    },
-    {
-      "ts": "2026-08-04T09:01:52Z",
-      "kind": "closed",
-      "issue": 3237,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3237",
-      "title": "Remove version_base"
-    },
-    {
-      "ts": "2026-08-04T09:01:52Z",
-      "kind": "status",
-      "issue": 3334,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3334",
-      "title": "Warn Hydra 1.3 users relying on Hydra 1.1 behavior before Hydra 1.4",
-      "detail": "not started → in progress",
-      "pr": {
-        "number": 3347,
-        "url": "https://github.com/facebookresearch/hydra/pull/3347"
-      }
     }
   ]
 }
