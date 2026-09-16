@@ -37,6 +37,7 @@ with open("README.md") as fh:
         author_email="omry@yadan.net",
         description="A framework for elegantly configuring complex applications",
         license="MIT",
+        license_files=["LICENSE", "ATTRIBUTION/LICENSE-antlr4"],
         long_description=LONG_DESC,
         long_description_content_type="text/markdown",
         url="https://github.com/hydra-ecosystem/hydra",
