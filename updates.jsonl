@@ -821,3 +821,4 @@
 {"ts": "2026-09-15T12:00:39Z", "kind": "closed", "issue": 3202, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3202", "title": "Disallow parent traversal in Defaults List config groups"}
 {"ts": "2026-09-15T12:19:05Z", "kind": "status", "issue": 2664, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664", "title": "[Not sure if bug/feature] Where does submitit error output go?", "detail": "not started → in progress", "pr": {"number": 3447, "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"}}
 {"ts": "2026-09-15T12:19:05Z", "kind": "pr", "issue": 2664, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664", "title": "[Not sure if bug/feature] Where does submitit error output go?", "detail": "linked #3447"}
+{"ts": "2026-09-16T07:16:04Z", "kind": "closed", "issue": 2664, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664", "title": "[Not sure if bug/feature] Where does submitit error output go?"}

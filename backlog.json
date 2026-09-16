@@ -1,27 +1,27 @@
 {
   "generated_on": "2026-09-16",
-  "generated_at": "2026-09-16T00:39:06Z",
+  "generated_at": "2026-09-16T07:16:04Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 71,
+    "open_total": 70,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
-        "count": 5,
-        "percentage": 7.0
+        "count": 4,
+        "percentage": 5.7
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
         "count": 54,
-        "percentage": 76.1
+        "percentage": 77.1
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.5
+        "percentage": 8.6
       },
       {
         "category": "Question",
@@ -33,20 +33,20 @@
         "category": "Refactor",
         "emoji": "🔧",
         "count": 2,
-        "percentage": 2.8
+        "percentage": 2.9
       },
       {
         "category": "Build",
         "emoji": "🏗️",
         "count": 3,
-        "percentage": 4.2
+        "percentage": 4.3
       }
     ],
     "by_status": [
       {
         "status": "in progress",
         "emoji": "🔄",
-        "count": 1
+        "count": 0
       },
       {
         "status": "community PR",
@@ -66,31 +66,11 @@
       {
         "status": "done",
         "emoji": "✅",
-        "count": 58
+        "count": 59
       }
     ]
   },
   "issues": [
-    {
-      "number": 2664,
-      "title": "[Not sure if bug/feature] Where does submitit error output go?",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "in progress",
-      "status_emoji": "🔄",
-      "prs": [
-        {
-          "number": 3447,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"
-        }
-      ],
-      "created": "2023-05-16",
-      "updated": "2026-09-11",
-      "labels": [
-        "bug"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/2664"
-    },
     {
       "number": 3375,
       "title": "Show project homepages in the Hydra Landscape",
@@ -2111,9 +2091,36 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
+    },
+    {
+      "number": 2664,
+      "title": "[Not sure if bug/feature] Where does submitit error output go?",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [
+        {
+          "number": 3447,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3447"
+        }
+      ],
+      "created": "2023-05-16",
+      "updated": "2026-09-11",
+      "labels": [
+        "bug"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/2664"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-16T07:16:04Z",
+      "kind": "closed",
+      "issue": 2664,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2664",
+      "title": "[Not sure if bug/feature] Where does submitit error output go?"
+    },
     {
       "ts": "2026-09-15T12:19:05Z",
       "kind": "pr",
@@ -3693,14 +3700,6 @@
         "number": 3347,
         "url": "https://github.com/facebookresearch/hydra/pull/3347"
       }
-    },
-    {
-      "ts": "2026-08-03T14:40:31Z",
-      "kind": "pr",
-      "issue": 3346,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3346",
-      "title": "Remove remaining Hydra 1.2 behavior and migration artifacts",
-      "detail": "linked #3342"
     }
   ]
 }
