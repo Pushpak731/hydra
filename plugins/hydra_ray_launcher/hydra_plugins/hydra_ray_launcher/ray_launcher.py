@@ -6,6 +6,8 @@ from hydra.plugins.launcher import Launcher
 from hydra.types import HydraContext, TaskFunction
 from omegaconf import DictConfig
 
+from . import _config as _config
+
 
 class RayLauncher(Launcher):
     def __init__(self, ray: DictConfig) -> None:

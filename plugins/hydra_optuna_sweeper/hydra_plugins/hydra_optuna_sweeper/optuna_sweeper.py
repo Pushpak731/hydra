@@ -6,6 +6,8 @@ from hydra.types import HydraContext, TaskFunction
 from hydra.utils import instantiate
 from omegaconf import DictConfig
 
+from . import config as config
+
 
 class OptunaSweeper(Sweeper):
     """Class to interface with Optuna"""

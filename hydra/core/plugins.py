@@ -3,10 +3,12 @@ import importlib
 import importlib.util
 import inspect
 import pkgutil
+import re
 import sys
 import warnings
 from collections import defaultdict
 from dataclasses import dataclass, field
+from importlib.metadata import entry_points
 from timeit import default_timer as timer
 from typing import Any, Dict, List, Optional, Tuple, Type
 
@@ -59,6 +61,7 @@ class Plugins(metaclass=Singleton):
         core_plugins = importlib.import_module("hydra._internal.core_plugins")
         top_level.append(core_plugins)
 
+        hydra_plugins = None
         try:
             hydra_plugins = importlib.import_module("hydra_plugins")
             top_level.append(hydra_plugins)
@@ -70,6 +73,29 @@ class Plugins(metaclass=Singleton):
         self.class_name_to_class = {}
 
         scanned_plugins, self.stats = self._scan_all_plugins(modules=top_level)
+        plugin_entry_points = entry_points(group="hydra.plugins")
+        for entry_point in plugin_entry_points:
+            try:
+                clazz = entry_point.load()
+            except (ImportError, AttributeError) as e:
+                warnings.warn(
+                    f"Error loading Hydra plugin entry point '{entry_point.name}': {e}",
+                    UserWarning,
+                )
+                continue
+            if not _is_concrete_plugin_type(clazz):
+                warnings.warn(
+                    f"Hydra plugin entry point '{entry_point.name}' is not a "
+                    "concrete plugin class",
+                    UserWarning,
+                )
+                continue
+            scanned_plugins.append(clazz)
+
+        if hydra_plugins is not None:
+            _warn_unenumerable_editable_namespace(
+                hydra_plugins.__path__, plugin_entry_points
+            )
         for clazz in scanned_plugins:
             self._register(clazz)
 
@@ -100,13 +126,6 @@ class Plugins(metaclass=Singleton):
             if classname is None:
                 raise ImportError("class not configured")
 
-            if not self.is_in_toplevel_plugins_module(classname):
-                # All plugins must be defined inside the approved top level modules.
-                # For plugins outside of hydra-core, the approved module is hydra_plugins.
-                raise RuntimeError(
-                    f"Invalid plugin '{classname}': not the hydra_plugins package"
-                )
-
             if classname not in self.class_name_to_class.keys():
                 raise RuntimeError(f"Unknown plugin class : '{classname}'")
             clazz = self.class_name_to_class[classname]
@@ -125,12 +144,6 @@ class Plugins(metaclass=Singleton):
             )
 
         return plugin
-
-    @staticmethod
-    def is_in_toplevel_plugins_module(clazz: str) -> bool:
-        return clazz.startswith("hydra_plugins.") or clazz.startswith(
-            "hydra._internal.core_plugins."
-        )
 
     def instantiate_sweeper(
         self,
@@ -276,3 +289,28 @@ def _is_concrete_plugin_type(obj: Any) -> bool:
     return (
         inspect.isclass(obj) and issubclass(obj, Plugin) and not inspect.isabstract(obj)
     )
+
+
+def _warn_unenumerable_editable_namespace(path: Any, plugin_entry_points: Any) -> None:
+    covered = {
+        re.sub(r"[-_.]+", "_", entry_point.dist.name).lower()
+        for entry_point in plugin_entry_points
+        if getattr(entry_point, "dist", None) is not None
+    }
+    for item in path:
+        if not (
+            item.startswith("__editable__.") and item.endswith(".finder.__path_hook__")
+        ):
+            continue
+        if any(pkgutil.iter_modules([item])):
+            continue
+        if any(item.startswith(f"__editable__.{name}-") for name in covered):
+            continue
+        warnings.warn(
+            "Hydra could not discover plugins in an editable hydra_plugins "
+            "namespace install. Legacy plugins can use "
+            "'pip install -e . --config-settings editable_mode=strict'; "
+            "plugin authors should migrate to entry points.",
+            UserWarning,
+        )
+        return

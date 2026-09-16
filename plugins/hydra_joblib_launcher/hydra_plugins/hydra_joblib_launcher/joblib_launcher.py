@@ -7,6 +7,8 @@ from hydra.plugins.launcher import Launcher
 from hydra.types import HydraContext, TaskFunction
 from omegaconf import DictConfig
 
+from . import config as config
+
 log = logging.getLogger(__name__)
 
 

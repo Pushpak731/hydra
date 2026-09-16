@@ -11,15 +11,37 @@ If you develop plugins, please join the <a href="https://hydra-framework.zulipch
 
 import GithubLink from "@site/src/components/GithubLink"
 
-Hydra plugins must be registered before they can be used. There are two ways to register a plugin:
-- via the automatic plugin discovery process, which discovers plugins located in the `hydra_plugins` namespace package
-- by calling the `register` method on Hydra's `Plugins` singleton class
+Hydra plugins must be registered before they can be used. Declare an entry
+point in the `hydra.plugins` group for each plugin class, or call the
+`register` method on Hydra's `Plugins` singleton. Hydra 1.4 also discovers
+plugins in the `hydra_plugins` namespace for compatibility, but this method is
+deprecated. See the [plugin discovery migration guide](/docs/upgrades/1.3_to_1.4/plugin_discovery).
 
-## Automatic Plugin discovery process
+## Entry point discovery
+
+For example, in `setup.py`:
+
+```python
+setup(
+    # ...
+    entry_points={
+        "hydra.plugins": [
+            "my_launcher = my_package.my_launcher:MyLauncher",
+        ]
+    },
+)
+```
+
+The target must be a concrete Hydra plugin class. Its module should also
+register any associated Hydra configuration when imported. Plugin classes no
+longer need to live in the `hydra_plugins` namespace. Keep expensive optional
+dependencies out of module-level imports.
+
+## Legacy namespace discovery
 
 If you create a Plugin and want it to be discovered automatically by Hydra, keep the following things in mind:
-- Hydra plugins can be either a standalone Python package, or a part of your existing Python package. 
-  In both cases - They should be in the namespace module `hydra_plugins` (This is a top level module, Your plugin will __NOT__ be discovered if you place it in `mylib.hydra_plugins`).
+- Namespace-discovered plugins can be either standalone packages or part of an
+  existing package. They must be in the top-level `hydra_plugins` namespace.
 - Do __NOT__ place an `__init__.py` file in `hydra_plugins` (doing so may break other installed Hydra plugins).
   
 The plugin discovery process runs whenever Hydra starts. During plugin discovery, Hydra scans for plugins in all the submodules of `hydra_plugins`. Hydra will import each module and look for plugins defined in that module.
@@ -46,7 +68,7 @@ def register_my_plugin() -> None:
 
 The best way to get started developing a Hydra plugin is to base your new plugin on one of the example plugins:
 - Copy the subtree of the relevant <GithubLink to="examples/plugins">example plugin</GithubLink> into a standalone project.
-- Edit `setup.py`, rename the plugin module, for example from `hydra_plugins.example_xyz_plugin` to `hydra_plugins.my_xyz_plugin`.
+- Edit `setup.py`, rename the plugin module, and declare its entry point.
 - Install the new plugin (Run this in the plugin directory: `pip install -e .`)
 - Run the included example app and make sure that the plugin is discovered:
 ```shell
@@ -60,7 +82,6 @@ Installed Hydra Plugins
         ...
 ```
 - Run the example application to see that that your plugin is doing something.
-- *[Optional]* If you want the plugin be embedded in your existing application/library, move the `hydra_plugins` directory 
-   and make sure that it's included as a namespace module in your final Python package. See the `setup.py` 
-   file included with the example plugin for hints (typically this involves using `find_namespace_packages(include=["hydra_plugins.*"])`).
+- *[Optional]* Embed the plugin in your existing application or library. An
+  entry-point plugin can use any importable package name.
 - Hack on your plugin, Ensure that the recommended tests and any tests you want to add are passing.
