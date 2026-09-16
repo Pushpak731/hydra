@@ -59,6 +59,7 @@ module.exports = {
             'patterns/extending_configs',
             'patterns/configuring_experiments',
             'patterns/configuring_plugins',
+            'patterns/environment_specific_overrides',
             'patterns/select_multiple_configs_from_config_group',
             'patterns/specializing_config',
             'patterns/write_protect_config_node',
