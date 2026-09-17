@@ -191,8 +191,9 @@ def test_experimental_save_job_info_callback(tmpdir: Path, multirun: bool) -> No
 def test_log_job_return_callback_is_deprecated_noop(
     status: JobStatus, caplog: Any
 ) -> None:
-    with warns(Hydra15MigrationWarning, match="no longer has any effect"):
+    with warns(Hydra15MigrationWarning, match="no longer has any effect") as record:
         callback = LogJobReturnCallback()
+    assert "task exceptions" in str(record[0].message)
 
     callback.on_job_end(
         config=OmegaConf.create({}),
