@@ -396,7 +396,11 @@ def _resolve_target(
 
         if resolved_name == "functools.partial":
             _warn_direct_functools_partial_target()
-        if execution_whitelist is None:
+        # This exact deprecated no-op emits its own migration warning.
+        if (
+            execution_whitelist is None
+            and target_name != "hydra.experimental.callbacks.LogJobReturnCallback"
+        ):
             _warn_legacy_execution_whitelist(target_name)
     if not callable(target):
         msg = f"Expected a callable target, got '{target}' of type '{type(target).__name__}'"

@@ -18,7 +18,6 @@ Add the expected application and logging targets to `@hydra.main()`:
 import hydra
 
 @hydra.main(
-    version_base=None,
     config_path="conf",
     config_name="config",
     execution_whitelist=("my_app.*",),

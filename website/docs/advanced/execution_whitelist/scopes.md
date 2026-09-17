@@ -105,7 +105,6 @@ from my_app.execution_policy import EXECUTION_WHITELIST
 
 
 @hydra.main(
-    version_base=None,
     config_path="conf",
     config_name="config",
     execution_whitelist=EXECUTION_WHITELIST,

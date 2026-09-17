@@ -201,6 +201,9 @@ followed by `MyCallback1.on_job_end`.
 
 ### Example callbacks
 
-We've included some example callbacks  <GithubLink to="hydra/experimental/callbacks.py">here</GithubLink>:
-- `LogJobReturnCallback` is especially useful for logging errors when running on a remote cluster (e.g. slurm.)
+We've included an example callback <GithubLink to="hydra/experimental/callbacks.py">here</GithubLink>:
 - `PickleJobInfoCallback` can be used to reproduce a Hydra job. See [here](/experimental/rerun.md) for more.
+
+`LogJobReturnCallback` is a deprecated no-op in Hydra 1.4 and will be removed in
+Hydra 1.5. Remove it from `hydra.callbacks`; Hydra now logs task failures to
+per-job logs without this callback.

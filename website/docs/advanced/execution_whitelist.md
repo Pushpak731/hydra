@@ -34,7 +34,6 @@ import hydra
 
 
 @hydra.main(
-    version_base=None,
     config_path="conf",
     config_name="config",
     execution_whitelist=(
@@ -64,7 +63,6 @@ execution whitelist:
 
 ```python
 @hydra.main(
-    version_base=None,
     config_path="conf",
     config_name="config",
     execution_whitelist=("my_app.logging.CustomHandler",),

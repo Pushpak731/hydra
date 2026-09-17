@@ -50,7 +50,6 @@ logging configuration may come from an untrusted source:
 import hydra
 
 @hydra.main(
-    version_base=None,
     config_path="conf",
     config_name="config",
     execution_whitelist=("my_app.logging.CustomHandler",),
