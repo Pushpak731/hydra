@@ -1,27 +1,27 @@
 {
   "generated_on": "2026-09-17",
-  "generated_at": "2026-09-17T19:29:51Z",
+  "generated_at": "2026-09-17T20:02:34Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 67,
+    "open_total": 68,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
         "count": 3,
-        "percentage": 4.5
+        "percentage": 4.4
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
-        "count": 53,
-        "percentage": 79.1
+        "count": 54,
+        "percentage": 79.4
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 9.0
+        "percentage": 8.8
       },
       {
         "category": "Question",
@@ -39,7 +39,7 @@
         "category": "Build",
         "emoji": "🏗️",
         "count": 3,
-        "percentage": 4.5
+        "percentage": 4.4
       }
     ],
     "by_status": [
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 67
+        "count": 68
       },
       {
         "status": "done",
@@ -974,14 +974,14 @@
     },
     {
       "number": 3361,
-      "title": "Modernize Hydra’s default exception rendering",
+      "title": "Show user frames in default instantiation error tracebacks",
       "category": "Bug",
       "category_emoji": "🐛",
       "status": "not started",
       "status_emoji": "⬜",
       "prs": [],
       "created": "2026-08-08",
-      "updated": "2026-08-08",
+      "updated": "2026-09-17",
       "labels": [],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3361"
     },
@@ -1122,6 +1122,19 @@
       "updated": "2026-09-10",
       "labels": [],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3445"
+    },
+    {
+      "number": 3454,
+      "title": "Improve provenance and default presentation of config composition errors",
+      "category": "Enhancement",
+      "category_emoji": "✨",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-09-17",
+      "updated": "2026-09-17",
+      "labels": [],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3454"
     },
     {
       "number": 385,
@@ -1943,6 +1956,27 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3400"
     },
     {
+      "number": 3401,
+      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
+      "category": "Refactor",
+      "category_emoji": "🔧",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [
+        {
+          "number": 3453,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3453"
+        }
+      ],
+      "created": "2026-08-23",
+      "updated": "2026-08-31",
+      "labels": [
+        "callbacks",
+        "maintenance"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3401"
+    },
+    {
       "number": 3402,
       "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin to change Hydra's behavior",
       "category": "Documentation",
@@ -2100,30 +2134,16 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
-    },
-    {
-      "number": 3401,
-      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
-      "category": "Refactor",
-      "category_emoji": "🔧",
-      "status": "done",
-      "status_emoji": "✅",
-      "prs": [
-        {
-          "number": 3453,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3453"
-        }
-      ],
-      "created": "2026-08-23",
-      "updated": "2026-08-31",
-      "labels": [
-        "callbacks",
-        "maintenance"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3401"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-17T20:02:34Z",
+      "kind": "new",
+      "issue": 3454,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3454",
+      "title": "Improve provenance and default presentation of config composition errors"
+    },
     {
       "ts": "2026-09-17T19:29:51Z",
       "kind": "closed",
@@ -3698,13 +3718,6 @@
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3329",
       "title": "Stop advertising HYDRA_FULL_ERROR in user-facing errors",
       "detail": "linked #3358"
-    },
-    {
-      "ts": "2026-08-08T07:23:12Z",
-      "kind": "closed",
-      "issue": 2350,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/2350",
-      "title": "[Bug] Structured config with dict as default value does not handle overrides correctly"
     }
   ]
 }
