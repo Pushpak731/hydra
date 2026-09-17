@@ -1,7 +1,9 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+import builtins
 import io
 import json
 import os
+import pickle
 import re
 import sys
 from pathlib import Path
@@ -19,7 +21,18 @@ from hydra._internal.utils import run_and_report
 from hydra.conf import HydraConf, RuntimeConf
 from hydra.core.hydra_config import HydraConfig
 from hydra.core.override_parser.overrides_parser import OverridesParser
-from hydra.errors import HydraDeprecationError
+from hydra.core.utils import (
+    JobReturn,
+    JobStatus,
+    _deserialize_traceback,
+    _serialize_exception_chain,
+    _serialize_traceback,
+)
+from hydra.errors import (
+    ConfigCompositionException,
+    HydraDeprecationError,
+    InstantiationException,
+)
 from hydra.test_utils.test_utils import (
     assert_multiline_regex_search,
     assert_regex_match,
@@ -201,6 +214,306 @@ class TestRunAndReport:
 
     def test_success(self) -> None:
         assert run_and_report(self.DemoFunctions.success_func) == 123
+
+    def test_composition_error_remains_compact(self) -> None:
+        def fail() -> None:
+            raise ConfigCompositionException("bad config")
+
+        mock_stderr = io.StringIO()
+        with raises(SystemExit, match="1"), patch("sys.stderr", new=mock_stderr):
+            run_and_report(fail)
+
+        assert mock_stderr.getvalue() == f"bad config{os.linesep}"
+
+    def test_instantiation_error_under_debugger_is_unmodified(self) -> None:
+        error = InstantiationException("bad target")
+
+        def fail() -> None:
+            raise error
+
+        with (
+            patch("hydra._internal.utils.is_under_debugger", return_value=True),
+            raises(InstantiationException) as exc_info,
+        ):
+            run_and_report(fail)
+
+        assert exc_info.value is error
+
+    @mark.parametrize("with_cause", [False, True])
+    def test_restored_instantiation_traceback(self, with_cause: bool) -> None:
+        root = Path(__file__).resolve().parent.parent
+        error = InstantiationException("bad target")
+        error.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "hydra/core/utils.py"), "_run_job", 208),
+                (str(root / "tests/test_utils.py"), "user_task", 1),
+                (
+                    str(root / "hydra/_internal/instantiate/_instantiate2.py"),
+                    "instantiate",
+                    476,
+                ),
+            ]
+        )
+        if with_cause:
+            cause = ValueError("target failed")
+            cause.__traceback__ = _deserialize_traceback(
+                [
+                    (
+                        str(root / "hydra/_internal/instantiate/_instantiate2.py"),
+                        "_call_target",
+                        275,
+                    ),
+                    (str(root / "tests/test_utils.py"), "user_target", 1),
+                ]
+            )
+            error.__cause__ = cause
+
+        captured: list[list[str]] = []
+
+        def hook(
+            error_type: type[BaseException],
+            exception: BaseException,
+            tb: Optional[TracebackType],
+        ) -> None:
+            assert error_type is InstantiationException
+            assert exception is error
+            for current in (
+                tb,
+                exception.__cause__.__traceback__ if exception.__cause__ else None,
+            ):
+                frames = []
+                while current is not None:
+                    frames.append(current.tb_frame.f_code.co_name)
+                    current = current.tb_next
+                captured.append(frames)
+
+        def fail() -> None:
+            raise error
+
+        with raises(SystemExit, match="1"), patch("sys.excepthook", new=hook):
+            run_and_report(fail)
+
+        assert captured == (
+            [["user_task"], ["user_target"]] if with_cause else [["user_task"], []]
+        )
+
+    def test_restored_nested_instantiation_traceback(self) -> None:
+        root = Path(__file__).resolve().parent.parent
+        inner_type = type(
+            "InstantiationException",
+            (Exception,),
+            {"__module__": "hydra.errors"},
+        )
+        cause = ValueError("target failed")
+        cause.__traceback__ = _deserialize_traceback(
+            [(str(root / "tests/test_utils.py"), "user_target", 1)]
+        )
+        inner = inner_type("inner target:\nValueError('target failed')")
+        inner.__cause__ = cause
+        inner.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "tests/test_utils.py"), "user_nested", 1),
+                (
+                    str(root / "hydra/_internal/instantiate/_instantiate2.py"),
+                    "instantiate",
+                    476,
+                ),
+            ]
+        )
+        error = InstantiationException("outer target")
+        error.__cause__ = inner
+        error.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "hydra/core/utils.py"), "_run_job", 208),
+                (str(root / "tests/test_utils.py"), "user_task", 1),
+            ]
+        )
+
+        def fail() -> None:
+            raise error
+
+        mock_stderr = io.StringIO()
+        with raises(SystemExit, match="1"), patch("sys.stderr", new=mock_stderr):
+            run_and_report(fail)
+
+        output = mock_stderr.getvalue()
+        assert "in user_task" in output
+        assert "in user_nested" in output
+        assert "in user_target" in output
+        assert "_instantiate2.py" not in output
+        assert output.count("ValueError: target failed") == 1
+        assert "ValueError('target failed')" not in output
+
+    def test_restored_lookup_wrapper_does_not_repeat_cause(self) -> None:
+        root = Path(__file__).resolve().parent.parent
+        missing_type = type(
+            "ModuleNotFoundError", (Exception,), {"__module__": "builtins"}
+        )
+        import_type = type("ImportError", (Exception,), {"__module__": "builtins"})
+        cause = missing_type("no module")
+        cause.__traceback__ = _deserialize_traceback(
+            [(str(root / "tests/test_utils.py"), "user_target", 1)]
+        )
+        lookup = import_type(f"Error loading target:\n{cause!r}")
+        lookup.__cause__ = cause
+        lookup.__traceback__ = _deserialize_traceback(
+            [(str(root / "hydra/_internal/_locate.py"), "_locate", 46)]
+        )
+        error = InstantiationException("Error locating target")
+        error.__cause__ = lookup
+        error.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "hydra/core/utils.py"), "_run_job", 208),
+                (str(root / "tests/test_utils.py"), "user_task", 1),
+            ]
+        )
+
+        def fail() -> None:
+            raise error
+
+        mock_stderr = io.StringIO()
+        with raises(SystemExit, match="1"), patch("sys.stderr", new=mock_stderr):
+            run_and_report(fail)
+
+        output = mock_stderr.getvalue()
+        assert "ModuleNotFoundError: no module" in output
+        assert "ModuleNotFoundError('no module')" not in output
+
+    def test_user_exception_with_read_only_args(self) -> None:
+        class ReadOnlyArgsError(Exception):
+            @property
+            def args(self) -> tuple[str]:  # pyrefly: ignore [bad-override]
+                return ("target failed",)
+
+            def __str__(self) -> str:
+                return "target failed"
+
+        root = Path(__file__).resolve().parent.parent
+        cause = ReadOnlyArgsError()
+        cause.__traceback__ = _deserialize_traceback(
+            [(str(root / "tests/test_utils.py"), "user_target", 1)]
+        )
+        error = InstantiationException("bad target")
+        error.__cause__ = cause
+        error.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "hydra/core/utils.py"), "_run_job", 208),
+                (str(root / "tests/test_utils.py"), "user_task", 1),
+            ]
+        )
+
+        def fail() -> None:
+            raise error
+
+        mock_stderr = io.StringIO()
+        with raises(SystemExit, match="1"), patch("sys.stderr", new=mock_stderr):
+            run_and_report(fail)
+
+        assert "ReadOnlyArgsError: target failed" in mock_stderr.getvalue()
+
+    @mark.parametrize("raise_on_bool", [False, True])
+    def test_explicit_cause_is_not_truth_tested(self, raise_on_bool: bool) -> None:
+        bool_calls = []
+
+        class FalseyError(Exception):
+            def __bool__(self) -> bool:
+                bool_calls.append(True)
+                if raise_on_bool:
+                    raise AssertionError("cause truth-tested")
+                return False
+
+        root = Path(__file__).resolve().parent.parent
+        cause = FalseyError("target failed")
+        cause.__traceback__ = _deserialize_traceback(
+            [
+                (
+                    str(root / "hydra/_internal/instantiate/_instantiate2.py"),
+                    "_call_target",
+                    275,
+                ),
+                (str(root / "tests/test_utils.py"), "user_target", 1),
+            ]
+        )
+        error = InstantiationException("bad target")
+        error.__cause__ = cause
+        error.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "hydra/core/utils.py"), "_run_job", 208),
+                (str(root / "tests/test_utils.py"), "user_task", 1),
+            ]
+        )
+
+        def fail() -> None:
+            raise error
+
+        captured = []
+
+        def hook(
+            error_type: type[BaseException],
+            exception: BaseException,
+            tb: Optional[TracebackType],
+        ) -> None:
+            assert error_type is InstantiationException
+            assert exception.__cause__ is cause
+            current = cause.__traceback__
+            while current is not None:
+                captured.append(current.tb_frame.f_code.co_name)
+                current = current.tb_next
+
+        with raises(SystemExit, match="1"), patch("sys.excepthook", new=hook):
+            run_and_report(fail)
+
+        assert bool_calls == []
+        assert captured == ["user_target"]
+
+    @mark.skipif(
+        sys.version_info < (3, 11), reason="ExceptionGroup requires Python 3.11"
+    )
+    @mark.parametrize("remote", [False, True])
+    def test_instantiation_exception_group_member_traceback(self, remote: bool) -> None:
+        root = Path(__file__).resolve().parent.parent
+        member = InstantiationException("nested failure")
+        member.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "tests/test_utils.py"), "user_nested", 1),
+                (
+                    str(root / "hydra/_internal/instantiate/_instantiate2.py"),
+                    "instantiate",
+                    476,
+                ),
+            ]
+        )
+        group_type = getattr(builtins, "ExceptionGroup")
+        group = group_type("target failures", [member])
+        error = InstantiationException("outer failure")
+        error.__cause__ = group
+        error.__traceback__ = _deserialize_traceback(
+            [
+                (str(root / "hydra/core/utils.py"), "_run_job", 208),
+                (str(root / "tests/test_utils.py"), "user_task", 1),
+            ]
+        )
+        if remote:
+            job_return = JobReturn(status=JobStatus.FAILED)
+            job_return.return_value = error
+            job_return._remote_traceback = _serialize_traceback(error.__traceback__)
+            job_return._remote_exception_chain = _serialize_exception_chain(error)
+            restored = pickle.loads(pickle.dumps(job_return))  # nosec B301: trusted test data
+            with raises(InstantiationException) as exc_info:
+                restored.return_value
+            error = exc_info.value
+
+        def fail() -> None:
+            raise error
+
+        mock_stderr = io.StringIO()
+        with raises(SystemExit, match="1"), patch("sys.stderr", new=mock_stderr):
+            run_and_report(fail)
+
+        output = mock_stderr.getvalue()
+        assert "in user_task" in output
+        assert "in user_nested" in output
+        assert "_instantiate2.py" not in output
 
     @mark.parametrize(
         "demo_func, expected_traceback_regex",
