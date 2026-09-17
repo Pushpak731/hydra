@@ -1592,6 +1592,72 @@ def test_job_exception_full_error(tmpdir: Any) -> None:
     assert "ZeroDivisionError: division by zero" in ret
 
 
+@mark.parametrize("case", ["target", "missing", "invalid", "nested"])
+def test_instantiate_exception_traceback(tmpdir: Any, case: str) -> None:
+    ret = run_with_error(
+        [
+            "tests/test_apps/app_instantiate_exception/my_app.py",
+            f"+case={case}",
+            f'hydra.run.dir="{tmpdir}"',
+        ]
+    )
+
+    assert "in my_app\n    return instantiate(" in ret
+    assert "hydra/_internal/instantiate/" not in ret
+    if case == "target":
+        assert "in fail" in ret
+        assert ret.count("ValueError: target failed") == 1
+        assert "ValueError('target failed')" not in ret
+    elif case == "missing":
+        assert "Error locating target '__main__.missing'" in ret
+        assert "full_key: child" in ret
+        assert ret.count("ImportError:") == 1
+        assert ret.count("ModuleNotFoundError:") == 1
+        assert "ModuleNotFoundError(" not in ret
+    elif case == "nested":
+        assert "in fail_nested" in ret
+        assert "in fail" in ret
+        assert ret.count("ValueError: target failed") == 1
+        assert "ValueError('target failed')" not in ret
+    else:
+        assert "Expected a callable target, got '123' of type 'int'" in ret
+        assert "direct cause" not in ret
+
+
+def test_instantiate_exception_full_error(tmpdir: Any) -> None:
+    ret = run_with_error(
+        [
+            "tests/test_apps/app_instantiate_exception/my_app.py",
+            "+case=target",
+            f'hydra.run.dir="{tmpdir}"',
+        ],
+        env={**os.environ, "HYDRA_FULL_ERROR": "1"},
+    )
+
+    assert "in my_app" in ret
+    assert "in fail" in ret
+    assert "hydra/_internal/instantiate/_instantiate2.py" in ret
+    assert "ValueError('target failed')" in ret
+
+
+def test_instantiate_exception_custom_hook(tmpdir: Any) -> None:
+    ret = run_with_error(
+        [
+            "tests/test_apps/app_instantiate_exception/my_app.py",
+            "+case=hook",
+            f'hydra.run.dir="{tmpdir}"',
+        ]
+    )
+
+    assert "hook: InstantiationException" in ret
+    assert "frame: my_app" in ret
+    assert "frame: instantiate" not in ret
+    assert "frame: _call_target" not in ret
+    assert "cause: ValueError: target failed" in ret
+    assert "cause frame: fail" in ret
+    assert "cause frame: _call_target" not in ret
+
+
 def test_structured_with_none_list(monkeypatch: Any, tmpdir: Path) -> None:
     monkeypatch.chdir("tests/test_apps/structured_with_none_list")
     cmd = [
