@@ -1,33 +1,33 @@
 {
   "generated_on": "2026-09-17",
-  "generated_at": "2026-09-17T07:17:42Z",
+  "generated_at": "2026-09-17T07:58:37Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 69,
+    "open_total": 68,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
-        "count": 4,
-        "percentage": 5.8
+        "count": 3,
+        "percentage": 4.4
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
         "count": 53,
-        "percentage": 76.8
+        "percentage": 77.9
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.7
+        "percentage": 8.8
       },
       {
         "category": "Question",
         "emoji": "❓",
         "count": 1,
-        "percentage": 1.4
+        "percentage": 1.5
       },
       {
         "category": "Refactor",
@@ -39,7 +39,7 @@
         "category": "Build",
         "emoji": "🏗️",
         "count": 3,
-        "percentage": 4.3
+        "percentage": 4.4
       }
     ],
     "by_status": [
@@ -51,7 +51,7 @@
       {
         "status": "community PR",
         "emoji": "🤝",
-        "count": 1
+        "count": 0
       },
       {
         "status": "blocked",
@@ -66,34 +66,11 @@
       {
         "status": "done",
         "emoji": "✅",
-        "count": 60
+        "count": 61
       }
     ]
   },
   "issues": [
-    {
-      "number": 2237,
-      "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "community PR",
-      "status_emoji": "🤝",
-      "prs": [
-        {
-          "number": 3451,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3451"
-        }
-      ],
-      "created": "2022-05-26",
-      "updated": "2026-09-16",
-      "labels": [
-        "bug",
-        "plugin",
-        "optuna",
-        "sweep"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/2237"
-    },
     {
       "number": 468,
       "title": "Specify the schema for returning the result of optimization.",
@@ -2116,9 +2093,39 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
+    },
+    {
+      "number": 2237,
+      "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [
+        {
+          "number": 3451,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3451"
+        }
+      ],
+      "created": "2022-05-26",
+      "updated": "2026-09-16",
+      "labels": [
+        "bug",
+        "optuna",
+        "plugin",
+        "sweep"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/2237"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-17T07:58:37Z",
+      "kind": "closed",
+      "issue": 2237,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2237",
+      "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value"
+    },
     {
       "ts": "2026-09-17T05:17:28Z",
       "kind": "pr",
@@ -3698,14 +3705,6 @@
         "number": 3355,
         "url": "https://github.com/facebookresearch/hydra/pull/3355"
       }
-    },
-    {
-      "ts": "2026-08-06T07:54:56Z",
-      "kind": "pr",
-      "issue": 3354,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3354",
-      "title": "`instantiate()` must treat call-site `???` as a literal value",
-      "detail": "linked #3355"
     }
   ]
 }

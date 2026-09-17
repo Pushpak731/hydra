@@ -837,3 +837,4 @@
 {"ts": "2026-09-16T21:42:00Z", "kind": "pr", "issue": 3406, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3406", "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin", "detail": "linked #3452"}
 {"ts": "2026-09-17T05:17:28Z", "kind": "status", "issue": 3406, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3406", "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin", "detail": "in progress → not started"}
 {"ts": "2026-09-17T05:17:28Z", "kind": "pr", "issue": 3406, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3406", "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin", "detail": "unlinked #3452"}
+{"ts": "2026-09-17T07:58:37Z", "kind": "closed", "issue": 2237, "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/2237", "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value"}
