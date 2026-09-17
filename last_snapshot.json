@@ -62,7 +62,7 @@
     "385": "2026-09-05",
     "753": "2026-09-05"
   },
-  "generated_at": "2026-09-17T07:58:37Z",
+  "generated_at": "2026-09-17T12:19:12Z",
   "issues": {
     "1085": {
       "category": "Enhancement",
@@ -702,9 +702,11 @@
         "callbacks",
         "maintenance"
       ],
-      "pr_numbers": [],
+      "pr_numbers": [
+        "3453"
+      ],
       "state": "OPEN",
-      "status": "not started",
+      "status": "in progress",
       "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
       "updated_at": "2026-08-31T11:43:53Z"
     },

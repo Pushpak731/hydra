@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-17",
-  "generated_at": "2026-09-17T07:58:37Z",
+  "generated_at": "2026-09-17T12:19:12Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 68,
@@ -46,7 +46,7 @@
       {
         "status": "in progress",
         "emoji": "🔄",
-        "count": 0
+        "count": 1
       },
       {
         "status": "community PR",
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 68
+        "count": 67
       },
       {
         "status": "done",
@@ -71,6 +71,27 @@
     ]
   },
   "issues": [
+    {
+      "number": 3401,
+      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
+      "category": "Refactor",
+      "category_emoji": "🔧",
+      "status": "in progress",
+      "status_emoji": "🔄",
+      "prs": [
+        {
+          "number": 3453,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3453"
+        }
+      ],
+      "created": "2026-08-23",
+      "updated": "2026-08-31",
+      "labels": [
+        "maintenance",
+        "callbacks"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3401"
+    },
     {
       "number": 468,
       "title": "Specify the schema for returning the result of optimization.",
@@ -1012,22 +1033,6 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3375"
     },
     {
-      "number": 3401,
-      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
-      "category": "Refactor",
-      "category_emoji": "🔧",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2026-08-23",
-      "updated": "2026-08-31",
-      "labels": [
-        "maintenance",
-        "callbacks"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3401"
-    },
-    {
       "number": 3403,
       "title": "Accept an instantiate whitelist on @hydra.main",
       "category": "Enhancement",
@@ -1201,6 +1206,29 @@
         "bug"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/1602"
+    },
+    {
+      "number": 2237,
+      "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [
+        {
+          "number": 3451,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3451"
+        }
+      ],
+      "created": "2022-05-26",
+      "updated": "2026-09-16",
+      "labels": [
+        "bug",
+        "optuna",
+        "plugin",
+        "sweep"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/2237"
     },
     {
       "number": 2664,
@@ -2093,32 +2121,29 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
-    },
-    {
-      "number": 2237,
-      "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "done",
-      "status_emoji": "✅",
-      "prs": [
-        {
-          "number": 3451,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3451"
-        }
-      ],
-      "created": "2022-05-26",
-      "updated": "2026-09-16",
-      "labels": [
-        "bug",
-        "optuna",
-        "plugin",
-        "sweep"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/2237"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-17T12:19:12Z",
+      "kind": "pr",
+      "issue": 3401,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3401",
+      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
+      "detail": "linked #3453"
+    },
+    {
+      "ts": "2026-09-17T12:19:12Z",
+      "kind": "status",
+      "issue": 3401,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3401",
+      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
+      "detail": "not started → in progress",
+      "pr": {
+        "number": 3453,
+        "url": "https://github.com/hydra-ecosystem/hydra/pull/3453"
+      }
+    },
     {
       "ts": "2026-09-17T07:58:37Z",
       "kind": "closed",
@@ -3684,26 +3709,6 @@
       "pr": {
         "number": 3358,
         "url": "https://github.com/facebookresearch/hydra/pull/3358"
-      }
-    },
-    {
-      "ts": "2026-08-07T07:32:45Z",
-      "kind": "pr",
-      "issue": 3353,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3353",
-      "title": "`instantiate()` call-site overrides must be visible to dependent interpolations",
-      "detail": "linked #3356"
-    },
-    {
-      "ts": "2026-08-07T07:32:45Z",
-      "kind": "status",
-      "issue": 3353,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3353",
-      "title": "`instantiate()` call-site overrides must be visible to dependent interpolations",
-      "detail": "community PR → in progress",
-      "pr": {
-        "number": 3355,
-        "url": "https://github.com/facebookresearch/hydra/pull/3355"
       }
     }
   ]
