@@ -1,6 +1,6 @@
 {
-  "generated_on": "2026-09-16",
-  "generated_at": "2026-09-16T21:42:00Z",
+  "generated_on": "2026-09-17",
+  "generated_at": "2026-09-17T05:17:28Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 69,
@@ -46,7 +46,7 @@
       {
         "status": "in progress",
         "emoji": "🔄",
-        "count": 1
+        "count": 0
       },
       {
         "status": "community PR",
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 67
+        "count": 68
       },
       {
         "status": "done",
@@ -71,26 +71,6 @@
     ]
   },
   "issues": [
-    {
-      "number": 3406,
-      "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
-      "category": "Documentation",
-      "category_emoji": "📄",
-      "status": "in progress",
-      "status_emoji": "🔄",
-      "prs": [
-        {
-          "number": 3452,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3452"
-        }
-      ],
-      "created": "2026-08-23",
-      "updated": "2026-08-23",
-      "labels": [
-        "documentation"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3406"
-    },
     {
       "number": 2237,
       "title": "[Bug] Optuna sweeper raises uncaught exception when run ends with nan value",
@@ -1168,6 +1148,21 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3445"
     },
     {
+      "number": 3406,
+      "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
+      "category": "Documentation",
+      "category_emoji": "📄",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-08-23",
+      "updated": "2026-08-23",
+      "labels": [
+        "documentation"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3406"
+    },
+    {
       "number": 385,
       "title": "Experimentation tracking support",
       "category": "Enhancement",
@@ -2124,6 +2119,22 @@
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-17T05:17:28Z",
+      "kind": "pr",
+      "issue": 3406,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3406",
+      "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
+      "detail": "unlinked #3452"
+    },
+    {
+      "ts": "2026-09-17T05:17:28Z",
+      "kind": "status",
+      "issue": 3406,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3406",
+      "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
+      "detail": "in progress → not started"
+    },
     {
       "ts": "2026-09-16T21:42:00Z",
       "kind": "pr",
@@ -3695,26 +3706,6 @@
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3354",
       "title": "`instantiate()` must treat call-site `???` as a literal value",
       "detail": "linked #3355"
-    },
-    {
-      "ts": "2026-08-06T07:54:56Z",
-      "kind": "pr",
-      "issue": 3353,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3353",
-      "title": "`instantiate()` call-site overrides must be visible to dependent interpolations",
-      "detail": "linked #3355"
-    },
-    {
-      "ts": "2026-08-06T07:54:56Z",
-      "kind": "status",
-      "issue": 3354,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3354",
-      "title": "`instantiate()` must treat call-site `???` as a literal value",
-      "detail": "not started → community PR",
-      "pr": {
-        "number": 3355,
-        "url": "https://github.com/facebookresearch/hydra/pull/3355"
-      }
     }
   ]
 }

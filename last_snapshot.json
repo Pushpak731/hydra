@@ -61,7 +61,7 @@
     "385": "2026-09-05",
     "753": "2026-09-05"
   },
-  "generated_at": "2026-09-16T21:42:00Z",
+  "generated_at": "2026-09-17T05:17:28Z",
   "issues": {
     "1085": {
       "category": "Enhancement",
@@ -754,11 +754,9 @@
       "labels": [
         "documentation"
       ],
-      "pr_numbers": [
-        "3452"
-      ],
+      "pr_numbers": [],
       "state": "OPEN",
-      "status": "in progress",
+      "status": "not started",
       "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
       "updated_at": "2026-08-23T21:52:00Z"
     },
