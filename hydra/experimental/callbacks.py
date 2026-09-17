@@ -19,7 +19,7 @@ class LogJobReturnCallback(Callback):
     def __init__(self) -> None:
         deprecation_warning(
             "LogJobReturnCallback no longer has any effect and will be removed "
-            "in Hydra 1.5. Hydra logs job failures to per-job logs without it.",
+            "in Hydra 1.5. Hydra logs task exceptions to per-job logs without it.",
             stacklevel=2,
             category=Hydra15MigrationWarning,
         )

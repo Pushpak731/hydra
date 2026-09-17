@@ -205,5 +205,7 @@ We've included an example callback <GithubLink to="hydra/experimental/callbacks.
 - `PickleJobInfoCallback` can be used to reproduce a Hydra job. See [here](/experimental/rerun.md) for more.
 
 `LogJobReturnCallback` is a deprecated no-op in Hydra 1.4 and will be removed in
-Hydra 1.5. Remove it from `hydra.callbacks`; Hydra now logs task failures to
-per-job logs without this callback.
+Hydra 1.5. Remove it from `hydra.callbacks`; Hydra logs task exceptions to
+per-job logs without this callback. Logging successful return values is
+deliberately no longer built in. If you need it, log in your application or
+implement an `on_job_end` callback.

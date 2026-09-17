@@ -18,7 +18,9 @@ complete. The final release notes will be the authoritative list.
   included in a stable Hydra release, but was available in Hydra 1.4
   development versions from February 2025 through July 2026.
 - The experimental `LogJobReturnCallback` is now a warning-emitting no-op.
-  Hydra logs task failures to per-job logs without it. Remove the callback
+  Hydra logs task exceptions to per-job logs without it. Logging successful
+  return values is deliberately no longer built in; log them in your
+  application or a custom `on_job_end` callback if needed. Remove the callback
   from your configuration; it will be removed in Hydra 1.5.
 - Parent traversal in Defaults List config paths is no longer accepted.
 - Backslashes in Defaults List config paths are no longer accepted. `/` is the
