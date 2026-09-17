@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-17",
-  "generated_at": "2026-09-17T05:17:28Z",
+  "generated_at": "2026-09-17T07:17:42Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 69,
@@ -1081,6 +1081,21 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3404"
     },
     {
+      "number": 3406,
+      "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
+      "category": "Documentation",
+      "category_emoji": "📄",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-08-23",
+      "updated": "2026-08-23",
+      "labels": [
+        "documentation"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3406"
+    },
+    {
       "number": 3408,
       "title": "Pin GitHub Actions to commit SHAs and enable Dependabot github-actions updates",
       "category": "Enhancement",
@@ -1146,21 +1161,6 @@
       "updated": "2026-09-10",
       "labels": [],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3445"
-    },
-    {
-      "number": 3406,
-      "title": "[Docs] Document hydra/env and using it with a SearchPathPlugin",
-      "category": "Documentation",
-      "category_emoji": "📄",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2026-08-23",
-      "updated": "2026-08-23",
-      "labels": [
-        "documentation"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3406"
     },
     {
       "number": 385,
