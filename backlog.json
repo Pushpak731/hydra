@@ -1,27 +1,27 @@
 {
   "generated_on": "2026-09-17",
-  "generated_at": "2026-09-17T12:19:12Z",
+  "generated_at": "2026-09-17T19:29:51Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 68,
+    "open_total": 67,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
         "count": 3,
-        "percentage": 4.4
+        "percentage": 4.5
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
         "count": 53,
-        "percentage": 77.9
+        "percentage": 79.1
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.8
+        "percentage": 9.0
       },
       {
         "category": "Question",
@@ -32,21 +32,21 @@
       {
         "category": "Refactor",
         "emoji": "🔧",
-        "count": 2,
-        "percentage": 2.9
+        "count": 1,
+        "percentage": 1.5
       },
       {
         "category": "Build",
         "emoji": "🏗️",
         "count": 3,
-        "percentage": 4.4
+        "percentage": 4.5
       }
     ],
     "by_status": [
       {
         "status": "in progress",
         "emoji": "🔄",
-        "count": 1
+        "count": 0
       },
       {
         "status": "community PR",
@@ -66,32 +66,11 @@
       {
         "status": "done",
         "emoji": "✅",
-        "count": 61
+        "count": 62
       }
     ]
   },
   "issues": [
-    {
-      "number": 3401,
-      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
-      "category": "Refactor",
-      "category_emoji": "🔧",
-      "status": "in progress",
-      "status_emoji": "🔄",
-      "prs": [
-        {
-          "number": 3453,
-          "url": "https://github.com/hydra-ecosystem/hydra/pull/3453"
-        }
-      ],
-      "created": "2026-08-23",
-      "updated": "2026-08-31",
-      "labels": [
-        "maintenance",
-        "callbacks"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3401"
-    },
     {
       "number": 468,
       "title": "Specify the schema for returning the result of optimization.",
@@ -2121,9 +2100,37 @@
         "difficult"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3436"
+    },
+    {
+      "number": 3401,
+      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5",
+      "category": "Refactor",
+      "category_emoji": "🔧",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [
+        {
+          "number": 3453,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3453"
+        }
+      ],
+      "created": "2026-08-23",
+      "updated": "2026-08-31",
+      "labels": [
+        "callbacks",
+        "maintenance"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3401"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-17T19:29:51Z",
+      "kind": "closed",
+      "issue": 3401,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3401",
+      "title": "Deprecate LogJobReturnCallback in Hydra 1.4 and remove it in 1.5"
+    },
     {
       "ts": "2026-09-17T12:19:12Z",
       "kind": "pr",
@@ -3698,18 +3705,6 @@
       "issue": 2350,
       "issue_url": "https://github.com/facebookresearch/hydra/issues/2350",
       "title": "[Bug] Structured config with dict as default value does not handle overrides correctly"
-    },
-    {
-      "ts": "2026-08-08T07:23:12Z",
-      "kind": "status",
-      "issue": 3329,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3329",
-      "title": "Stop advertising HYDRA_FULL_ERROR in user-facing errors",
-      "detail": "not started → community PR",
-      "pr": {
-        "number": 3358,
-        "url": "https://github.com/facebookresearch/hydra/pull/3358"
-      }
     }
   ]
 }
