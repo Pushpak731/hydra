@@ -15,7 +15,11 @@ from omegaconf.errors import OmegaConfBaseException
 from hydra._internal._locate import _locate as _locate_impl
 from hydra._internal.config_search_path_impl import ConfigSearchPathImpl
 from hydra.core.config_search_path import ConfigSearchPath, SearchPathQuery
-from hydra.core.utils import get_valid_filename, validate_config_path
+from hydra.core.utils import (
+    _exception_group_members,
+    get_valid_filename,
+    validate_config_path,
+)
 from hydra.errors import (
     CompactHydraException,
     InstantiationException,
@@ -215,6 +219,174 @@ def _is_env_set(name: str) -> bool:
     return name in os.environ and os.environ[name] == "1"
 
 
+def _build_traceback(frames: List[TracebackType]) -> Optional[TracebackType]:
+    result: Optional[TracebackType] = None
+    for frame in reversed(frames):
+        result = TracebackType(result, frame.tb_frame, frame.tb_lasti, frame.tb_lineno)
+    return result
+
+
+def _traceback_module(tb: TracebackType) -> str:
+    frame = tb.tb_frame
+    module = frame.f_globals.get("__name__")
+    if isinstance(module, str):
+        return module
+    if "_SyntheticTraceback" not in frame.f_globals:
+        return ""
+
+    # JobReturn restores remote frames with only their original code location.
+    filename = frame.f_code.co_filename.replace("\\", "/")
+    if "/hydra/" in filename and filename.endswith(".py"):
+        return "hydra." + filename.rsplit("/hydra/", 1)[1][:-3].replace("/", ".")
+    if "/importlib/" in filename:
+        return "importlib." + filename.rsplit("/importlib/", 1)[1].removesuffix(
+            ".py"
+        ).replace("/", ".")
+    if filename.startswith("<frozen importlib."):
+        return filename.removeprefix("<frozen ").removesuffix(">")
+    return ""
+
+
+def _instantiation_frame(tb: TracebackType) -> bool:
+    module = _traceback_module(tb)
+    return (
+        module.startswith("hydra._internal.instantiate.")
+        or module == "hydra._internal.execution_policy"
+    )
+
+
+def _filter_instantiation_traceback(
+    ex: InstantiationException,
+) -> Optional[TracebackType]:
+    tb = ex.__traceback__
+    while tb is not None:
+        if _traceback_module(
+            tb
+        ) == "hydra.core.utils" and tb.tb_frame.f_code.co_name in {
+            "run_job",
+            "_run_job",
+        }:
+            tb = tb.tb_next
+            break
+        tb = tb.tb_next
+
+    if tb is None:
+        # Callback and logging targets can fail before run_job starts.
+        tb = ex.__traceback__
+        while tb is not None and _traceback_module(tb).startswith("hydra."):
+            tb = tb.tb_next
+
+    frames = []
+    while tb is not None:
+        if not _instantiation_frame(tb):
+            frames.append(tb)
+        tb = tb.tb_next
+    return _build_traceback(frames)
+
+
+def _filter_instantiation_cause(tb: Optional[TracebackType]) -> Optional[TracebackType]:
+    # Remove leading lookup machinery and instantiation frames at every depth.
+    # A user target can itself call instantiate(), so keep its call site and
+    # target frames without exposing either layer of Hydra internals.
+    while tb is not None:
+        module = _traceback_module(tb)
+        if not (
+            _instantiation_frame(tb)
+            or module in {"hydra._internal._locate", "hydra._internal.utils"}
+            or module == "importlib"
+            or module.startswith("importlib.")
+            or module.startswith("_frozen_importlib")
+        ):
+            break
+        tb = tb.tb_next
+
+    frames = []
+    while tb is not None:
+        if not _instantiation_frame(tb):
+            frames.append(tb)
+        tb = tb.tb_next
+    return _build_traceback(frames)
+
+
+def _hydra_cause_wrapper(error: BaseException) -> bool:
+    error_type = type(error)
+    instantiation_wrapper = (
+        error_type.__module__ == InstantiationException.__module__
+        and error_type.__name__ == InstantiationException.__name__
+    )
+    import_wrapper = (
+        error_type.__module__ == ImportError.__module__
+        and error_type.__name__ == ImportError.__name__
+    )
+    if not instantiation_wrapper and not import_wrapper:
+        return False
+    tb = error.__traceback__
+    if tb is None:
+        return False
+    # The last frame is the raise site; user errors may traverse Hydra frames.
+    while tb.tb_next is not None:
+        tb = tb.tb_next
+    return (instantiation_wrapper and _instantiation_frame(tb)) or (
+        import_wrapper and _traceback_module(tb) == "hydra._internal._locate"
+    )
+
+
+def _report_instantiation_exception(ex: InstantiationException) -> None:
+    filtered_tb = _filter_instantiation_traceback(ex)
+    saved_tracebacks = []
+    saved_args = []
+    saved_import_messages = []
+    try:
+        pending: List[BaseException] = [ex]
+        seen = set()
+        while pending:
+            current = pending.pop()
+            if id(current) in seen:
+                continue
+            seen.add(id(current))
+            saved_tracebacks.append((current, current.__traceback__))
+            trim_hydra_wrapper = _hydra_cause_wrapper(current)
+            current.with_traceback(
+                filtered_tb
+                if current is ex
+                else _filter_instantiation_cause(current.__traceback__)
+            )
+            if trim_hydra_wrapper and current.__cause__ is not None:
+                message = str(current)
+                repeated_cause = f"\n{repr(current.__cause__)}"
+                if repeated_cause in message:
+                    trimmed = message.replace(repeated_cause, "", 1)
+                    original_args = current.args
+                    current.args = (trimmed,)
+                    saved_args.append((current, original_args))
+                    if isinstance(current, ImportError):
+                        # ImportError.__str__ uses msg rather than args.
+                        saved_import_messages.append((current, current.msg))
+                        current.msg = trimmed
+            pending.extend(reversed(_exception_group_members(current)))
+            chained = current.__cause__
+            if chained is None and not current.__suppress_context__:
+                chained = current.__context__
+            if chained is not None:
+                pending.append(chained)
+
+        exception_hook = sys.excepthook
+        if exception_hook is sys.__excepthook__ or not callable(exception_hook):
+            traceback.print_exception(type(ex), ex, filtered_tb)
+        else:
+            try:
+                exception_hook(type(ex), ex, filtered_tb)
+            except Exception:
+                traceback.print_exception(type(ex), ex, filtered_tb)
+    finally:
+        for error, original_args in saved_args:
+            error.args = original_args
+        for error, original_msg in saved_import_messages:
+            error.msg = original_msg
+        for error, original_tb in saved_tracebacks:
+            error.with_traceback(original_tb)
+
+
 def run_and_report(func: Any) -> Any:
     try:
         return func()
@@ -223,7 +395,9 @@ def run_and_report(func: Any) -> Any:
             raise ex
         else:
             try:
-                if isinstance(ex, CompactHydraException):
+                if isinstance(ex, InstantiationException):
+                    _report_instantiation_exception(ex)
+                elif isinstance(ex, CompactHydraException):
                     sys.stderr.write(str(ex) + os.linesep)
                     if isinstance(ex.__cause__, OmegaConfBaseException):
                         sys.stderr.write(str(ex.__cause__) + os.linesep)
