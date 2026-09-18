@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-18",
-  "generated_at": "2026-09-18T00:40:46Z",
+  "generated_at": "2026-09-18T07:15:41Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 68,
@@ -46,7 +46,7 @@
       {
         "status": "in progress",
         "emoji": "🔄",
-        "count": 0
+        "count": 1
       },
       {
         "status": "community PR",
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 68
+        "count": 67
       },
       {
         "status": "done",
@@ -71,6 +71,24 @@
     ]
   },
   "issues": [
+    {
+      "number": 3361,
+      "title": "Show user frames in default instantiation error tracebacks",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "in progress",
+      "status_emoji": "🔄",
+      "prs": [
+        {
+          "number": 3455,
+          "url": "https://github.com/hydra-ecosystem/hydra/pull/3455"
+        }
+      ],
+      "created": "2026-08-08",
+      "updated": "2026-09-17",
+      "labels": [],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3361"
+    },
     {
       "number": 468,
       "title": "Specify the schema for returning the result of optimization.",
@@ -971,19 +989,6 @@
         "needs decision"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3328"
-    },
-    {
-      "number": 3361,
-      "title": "Show user frames in default instantiation error tracebacks",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2026-08-08",
-      "updated": "2026-09-17",
-      "labels": [],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3361"
     },
     {
       "number": 3364,
@@ -2137,6 +2142,26 @@
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-18T07:15:41Z",
+      "kind": "pr",
+      "issue": 3361,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3361",
+      "title": "Show user frames in default instantiation error tracebacks",
+      "detail": "linked #3455"
+    },
+    {
+      "ts": "2026-09-18T07:15:41Z",
+      "kind": "status",
+      "issue": 3361,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3361",
+      "title": "Show user frames in default instantiation error tracebacks",
+      "detail": "not started → in progress",
+      "pr": {
+        "number": 3455,
+        "url": "https://github.com/hydra-ecosystem/hydra/pull/3455"
+      }
+    },
     {
       "ts": "2026-09-17T20:02:34Z",
       "kind": "new",
@@ -3703,21 +3728,6 @@
       "issue": 3354,
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3354",
       "title": "`instantiate()` must treat call-site `???` as a literal value"
-    },
-    {
-      "ts": "2026-08-08T19:58:43Z",
-      "kind": "closed",
-      "issue": 3353,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3353",
-      "title": "`instantiate()` call-site overrides must be visible to dependent interpolations"
-    },
-    {
-      "ts": "2026-08-08T07:23:12Z",
-      "kind": "pr",
-      "issue": 3329,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3329",
-      "title": "Stop advertising HYDRA_FULL_ERROR in user-facing errors",
-      "detail": "linked #3358"
     }
   ]
 }
