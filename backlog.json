@@ -1,45 +1,45 @@
 {
   "generated_on": "2026-09-19",
-  "generated_at": "2026-09-19T07:13:37Z",
+  "generated_at": "2026-09-19T10:44:00Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 68,
+    "open_total": 69,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
-        "count": 3,
-        "percentage": 4.4
+        "count": 4,
+        "percentage": 5.8
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
         "count": 54,
-        "percentage": 79.4
+        "percentage": 78.3
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.8
+        "percentage": 8.7
       },
       {
         "category": "Question",
         "emoji": "❓",
         "count": 1,
-        "percentage": 1.5
+        "percentage": 1.4
       },
       {
         "category": "Refactor",
         "emoji": "🔧",
         "count": 1,
-        "percentage": 1.5
+        "percentage": 1.4
       },
       {
         "category": "Build",
         "emoji": "🏗️",
         "count": 3,
-        "percentage": 4.4
+        "percentage": 4.3
       }
     ],
     "by_status": [
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 67
+        "count": 68
       },
       {
         "status": "done",
@@ -1142,6 +1142,19 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3454"
     },
     {
+      "number": 3456,
+      "title": "[Bug] Casting sweeps drops tags and shuffle settings",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-09-19",
+      "updated": "2026-09-19",
+      "labels": [],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3456"
+    },
+    {
       "number": 385,
       "title": "Experimentation tracking support",
       "category": "Enhancement",
@@ -2142,6 +2155,13 @@
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-19T10:44:00Z",
+      "kind": "new",
+      "issue": 3456,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3456",
+      "title": "[Bug] Casting sweeps drops tags and shuffle settings"
+    },
     {
       "ts": "2026-09-18T07:15:41Z",
       "kind": "pr",
@@ -3721,13 +3741,6 @@
       "issue": 3361,
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3361",
       "title": "Modernize Hydra’s default exception rendering"
-    },
-    {
-      "ts": "2026-08-08T20:05:31Z",
-      "kind": "closed",
-      "issue": 3354,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3354",
-      "title": "`instantiate()` must treat call-site `???` as a literal value"
     }
   ]
 }
