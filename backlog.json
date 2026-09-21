@@ -1,27 +1,27 @@
 {
   "generated_on": "2026-09-21",
-  "generated_at": "2026-09-21T07:25:24Z",
+  "generated_at": "2026-09-21T21:37:45Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 69,
+    "open_total": 70,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
-        "count": 4,
-        "percentage": 5.8
+        "count": 5,
+        "percentage": 7.1
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
         "count": 54,
-        "percentage": 78.3
+        "percentage": 77.1
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.7
+        "percentage": 8.6
       },
       {
         "category": "Question",
@@ -61,7 +61,7 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 68
+        "count": 69
       },
       {
         "status": "done",
@@ -1155,6 +1155,21 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3456"
     },
     {
+      "number": 3457,
+      "title": "[Bug] Provide GitHub tagged release for 1.3.7",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "not started",
+      "status_emoji": "⬜",
+      "prs": [],
+      "created": "2026-09-21",
+      "updated": "2026-09-21",
+      "labels": [
+        "bug"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3457"
+    },
+    {
       "number": 385,
       "title": "Experimentation tracking support",
       "category": "Enhancement",
@@ -2155,6 +2170,13 @@
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-21T21:37:45Z",
+      "kind": "new",
+      "issue": 3457,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3457",
+      "title": "[Bug] Provide GitHub tagged release for 1.3.7"
+    },
     {
       "ts": "2026-09-19T10:44:00Z",
       "kind": "new",
@@ -3734,13 +3756,6 @@
       "issue": 3362,
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3362",
       "title": "Reject backslashes in Defaults List paths"
-    },
-    {
-      "ts": "2026-08-08T20:45:01Z",
-      "kind": "new",
-      "issue": 3361,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3361",
-      "title": "Modernize Hydra’s default exception rendering"
     }
   ]
 }
