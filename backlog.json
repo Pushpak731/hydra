@@ -1,6 +1,6 @@
 {
   "generated_on": "2026-09-22",
-  "generated_at": "2026-09-22T20:33:36Z",
+  "generated_at": "2026-09-22T22:35:58Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
     "open_total": 70,
@@ -1160,8 +1160,10 @@
       "status_emoji": "⬜",
       "prs": [],
       "created": "2026-09-19",
-      "updated": "2026-09-19",
-      "labels": [],
+      "updated": "2026-09-22",
+      "labels": [
+        "bug"
+      ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3456"
     },
     {
@@ -2195,6 +2197,14 @@
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-22T22:35:58Z",
+      "kind": "label",
+      "issue": 3456,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3456",
+      "title": "[Bug] Casting sweeps drops tags and shuffle settings",
+      "detail": "added \"bug\""
+    },
     {
       "ts": "2026-09-22T20:33:36Z",
       "kind": "pr",
@@ -3775,13 +3785,6 @@
       "issue_url": "https://github.com/facebookresearch/hydra/issues/3362",
       "title": "Reject backslashes in Defaults List paths",
       "detail": "linked #3365"
-    },
-    {
-      "ts": "2026-08-09T13:42:58Z",
-      "kind": "closed",
-      "issue": 3283,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3283",
-      "title": "Reject duplicate override targets during composition"
     }
   ]
 }
