@@ -60,10 +60,11 @@
     "3426": "2026-09-02",
     "3427": "2026-09-07",
     "3436": "2026-09-05",
+    "3457": "2026-09-22",
     "385": "2026-09-05",
     "753": "2026-09-05"
   },
-  "generated_at": "2026-09-22T09:13:52Z",
+  "generated_at": "2026-09-22T20:33:36Z",
   "issues": {
     "1085": {
       "category": "Enhancement",
@@ -254,9 +255,11 @@
       "labels": [
         "enhancement"
       ],
-      "pr_numbers": [],
+      "pr_numbers": [
+        "3459"
+      ],
       "state": "OPEN",
-      "status": "not started",
+      "status": "community PR",
       "title": "[Feature Request] ConfigStore to warn or raise on name/group collision",
       "updated_at": "2026-07-29T07:39:45Z"
     },
@@ -770,9 +773,11 @@
       "category": "Build",
       "created_at": "2026-09-10T15:48:51Z",
       "labels": [],
-      "pr_numbers": [],
+      "pr_numbers": [
+        "3460"
+      ],
       "state": "OPEN",
-      "status": "not started",
+      "status": "community PR",
       "title": "Include ANTLR license with the build JAR in Hydra 1.4 sdists",
       "updated_at": "2026-09-10T15:48:51Z"
     },
@@ -805,18 +810,6 @@
       "status": "not started",
       "title": "[Bug] Casting sweeps drops tags and shuffle settings",
       "updated_at": "2026-09-19T10:42:39Z"
-    },
-    "3457": {
-      "category": "Bug",
-      "created_at": "2026-09-21T21:36:21Z",
-      "labels": [
-        "bug"
-      ],
-      "pr_numbers": [],
-      "state": "OPEN",
-      "status": "not started",
-      "title": "[Bug] Provide GitHub tagged release for 1.3.7",
-      "updated_at": "2026-09-21T21:36:21Z"
     },
     "3458": {
       "category": "Bug",
@@ -1720,6 +1713,18 @@
       "status": "done",
       "title": "`instantiate()` loses merged ancestor values when copying a context-parented subtree",
       "updated_at": "2026-09-04T18:47:46Z"
+    },
+    "3457": {
+      "category": "Bug",
+      "created_at": "2026-09-21T21:36:21Z",
+      "labels": [
+        "bug"
+      ],
+      "pr_numbers": [],
+      "state": "CLOSED",
+      "status": "done",
+      "title": "[Bug] Provide GitHub tagged release for 1.3.7",
+      "updated_at": "2026-09-21T21:36:21Z"
     },
     "385": {
       "category": "Enhancement",
