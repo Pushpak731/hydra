@@ -1,27 +1,27 @@
 {
   "generated_on": "2026-09-22",
-  "generated_at": "2026-09-22T22:35:58Z",
+  "generated_at": "2026-09-22T22:41:27Z",
   "repo": "hydra-ecosystem/hydra",
   "summary": {
-    "open_total": 70,
+    "open_total": 69,
     "by_category": [
       {
         "category": "Bug",
         "emoji": "🐛",
-        "count": 5,
-        "percentage": 7.1
+        "count": 4,
+        "percentage": 5.8
       },
       {
         "category": "Enhancement",
         "emoji": "✨",
         "count": 54,
-        "percentage": 77.1
+        "percentage": 78.3
       },
       {
         "category": "Documentation",
         "emoji": "📄",
         "count": 6,
-        "percentage": 8.6
+        "percentage": 8.7
       },
       {
         "category": "Question",
@@ -61,12 +61,12 @@
       {
         "status": "not started",
         "emoji": "⬜",
-        "count": 67
+        "count": 66
       },
       {
         "status": "done",
         "emoji": "✅",
-        "count": 63
+        "count": 64
       }
     ]
   },
@@ -1167,21 +1167,6 @@
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3456"
     },
     {
-      "number": 3458,
-      "title": "[Bug] What is the correct way to use optuna-sweeper with joblib-sweeper?",
-      "category": "Bug",
-      "category_emoji": "🐛",
-      "status": "not started",
-      "status_emoji": "⬜",
-      "prs": [],
-      "created": "2026-09-22",
-      "updated": "2026-09-22",
-      "labels": [
-        "bug"
-      ],
-      "url": "https://github.com/hydra-ecosystem/hydra/issues/3458"
-    },
-    {
       "number": 385,
       "title": "Experimentation tracking support",
       "category": "Enhancement",
@@ -2194,9 +2179,31 @@
         "bug"
       ],
       "url": "https://github.com/hydra-ecosystem/hydra/issues/3457"
+    },
+    {
+      "number": 3458,
+      "title": "[Bug] What is the correct way to use optuna-sweeper with joblib-sweeper?",
+      "category": "Bug",
+      "category_emoji": "🐛",
+      "status": "done",
+      "status_emoji": "✅",
+      "prs": [],
+      "created": "2026-09-22",
+      "updated": "2026-09-22",
+      "labels": [
+        "bug"
+      ],
+      "url": "https://github.com/hydra-ecosystem/hydra/issues/3458"
     }
   ],
   "updates": [
+    {
+      "ts": "2026-09-22T22:41:27Z",
+      "kind": "closed",
+      "issue": 3458,
+      "issue_url": "https://github.com/hydra-ecosystem/hydra/issues/3458",
+      "title": "[Bug] What is the correct way to use optuna-sweeper with joblib-sweeper?"
+    },
     {
       "ts": "2026-09-22T22:35:58Z",
       "kind": "label",
@@ -3777,14 +3784,6 @@
         "number": 3367,
         "url": "https://github.com/facebookresearch/hydra/pull/3367"
       }
-    },
-    {
-      "ts": "2026-08-09T13:42:58Z",
-      "kind": "pr",
-      "issue": 3362,
-      "issue_url": "https://github.com/facebookresearch/hydra/issues/3362",
-      "title": "Reject backslashes in Defaults List paths",
-      "detail": "linked #3365"
     }
   ]
 }
