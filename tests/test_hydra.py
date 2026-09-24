@@ -733,8 +733,10 @@ def test_multirun_with_free_override(
         assert sweep.returns is not None and len(sweep.returns[0]) == 2
         assert sweep.returns[0][0].overrides == ["+free_group=opt1"]
         assert sweep.returns[0][0].cfg == {"group_opt1": True, "free_group_opt1": True}
+        assert sweep.returns[0][0].hydra_cfg.hydra.job.id == "0"
         assert sweep.returns[0][1].overrides == ["+free_group=opt2"]
         assert sweep.returns[0][1].cfg == {"group_opt1": True, "free_group_opt2": True}
+        assert sweep.returns[0][1].hydra_cfg.hydra.job.id == "1"
 
 
 @mark.parametrize(

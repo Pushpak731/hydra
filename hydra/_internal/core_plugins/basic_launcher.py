@@ -73,7 +73,7 @@ class BasicLauncher(Launcher):
                 self.config, list(overrides)
             )
             with open_dict(sweep_config):
-                sweep_config.hydra.job.id = idx
+                sweep_config.hydra.job.id = str(idx)
                 sweep_config.hydra.job.num = idx
             ret = run_job(
                 hydra_context=self.hydra_context,
