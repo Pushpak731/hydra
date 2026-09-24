@@ -123,7 +123,7 @@ defaults = [
 
 ```text title="Output"
 $ python my_app.py
-You must specify 'db', e.g, db=<OPTION>
+In 'config': You must specify 'db', e.g, db=<OPTION>
 Available options:
         mysql
         postgresql

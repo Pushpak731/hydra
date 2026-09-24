@@ -446,12 +446,50 @@ def test_defaults_not_list_exception() -> None:
     config_loader = ConfigLoaderImpl(
         config_search_path=create_config_search_path("hydra/test_utils/configs")
     )
-    with raises(ValueError):
+    with raises(
+        ConfigCompositionException,
+        match="Invalid defaults list in 'defaults_not_list.yaml', defaults must be a list",
+    ):
         config_loader.load_configuration(
             config_name="defaults_not_list.yaml",
             overrides=[],
             run_mode=RunMode.RUN,
         )
+
+
+def test_config_store_defaults_list_error_provenance(
+    hydra_restore_singletons: Any,
+) -> None:
+    cs = ConfigStore.instance()
+    cs.store(name="provenance_missing", node={"defaults": [{"db": "???"}]})
+    cs.store(group="db", name="first", node={})
+    cs.store(group="db", name="second", node={})
+    cs.store(name="provenance_nested", node={"defaults": [{"db": "second"}]})
+    cs.store(
+        name="provenance_conflict",
+        node={"defaults": [{"db": "first"}, "provenance_nested"]},
+    )
+    cs.store(name="provenance_invalid", node={"defaults": {"db": "first"}})
+    config_loader = ConfigLoaderImpl(config_search_path=create_config_search_path(None))
+
+    with raises(ConfigCompositionException, match="In 'provenance_missing':") as e:
+        config_loader.load_configuration(
+            config_name="provenance_missing", overrides=[], run_mode=RunMode.RUN
+        )
+    assert "You must specify 'db'" in str(e.value)
+
+    with raises(ConfigCompositionException, match="Multiple values for db") as e:
+        config_loader.load_configuration(
+            config_name="provenance_conflict", overrides=[], run_mode=RunMode.RUN
+        )
+    assert "'second' from 'provenance_nested'" in str(e.value)
+    assert "'first' from 'provenance_conflict'" in str(e.value)
+
+    with raises(ConfigCompositionException, match="provenance_invalid") as e:
+        config_loader.load_configuration(
+            config_name="provenance_invalid", overrides=[], run_mode=RunMode.RUN
+        )
+    assert "defaults must be a list (got mapping)" in str(e.value)
 
 
 def test_override_hydra_config_value_from_config_file() -> None:

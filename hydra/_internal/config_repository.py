@@ -16,6 +16,7 @@ from omegaconf import (
 
 from hydra.core.config_search_path import ConfigSearchPath
 from hydra.core.object_type import ObjectType
+from hydra.errors import ConfigCompositionException
 from hydra.plugins.config_source import ConfigResult, ConfigSource
 
 from ..core.default_element import ConfigDefault, GroupDefault, InputDefault
@@ -268,7 +269,7 @@ class ConfigRepository(IConfigRepository):
                 type_str = "mapping"
             else:
                 type_str = type(defaults).__name__
-            raise ValueError(
+            raise ConfigCompositionException(
                 f"Invalid defaults list in '{config_path}', defaults must be a list (got {type_str})"
             )
 

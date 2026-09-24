@@ -1618,7 +1618,7 @@ def test_name_collision(
             raises(
                 ConfigCompositionException,
                 match=dedent("""\
-                You must specify 'db', e.g, db=<OPTION>
+                In 'with_missing': You must specify 'db', e.g, db=<OPTION>
                 Available options:"""),
             ),
             id="with_missing",
@@ -1675,7 +1675,7 @@ def test_name_collision(
             raises(
                 ConfigCompositionException,
                 match=dedent("""\
-                    You must specify 'group1/group2', e.g, group1/group2=<OPTION>
+                    In 'group1/with_missing': You must specify 'group1/group2', e.g, group1/group2=<OPTION>
                     Available options"""),
             ),
             id="nested_missing",

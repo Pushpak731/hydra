@@ -1407,6 +1407,45 @@ def test_multirun_structured_conflict(
 
 
 @mark.parametrize(
+    "config_path,config_name,expected",
+    [
+        param(
+            "../../../hydra/test_utils/configs",
+            "unspecified_mandatory_default",
+            "In 'unspecified_mandatory_default': You must specify 'group1'",
+            id="mandatory",
+        ),
+        param(
+            "../../../tests/defaults_list/data",
+            "error_changing_group",
+            "Conflicting choices: 'file2' from 'error_changing_group' and "
+            "'file1' from 'error_changing_group'",
+            id="conflict",
+        ),
+        param(
+            "../../../hydra/test_utils/configs",
+            "defaults_not_list",
+            "Invalid defaults list in 'defaults_not_list', defaults must be a list",
+            id="malformed",
+        ),
+    ],
+)
+def test_composition_error_cli_is_compact_and_located(
+    config_path: str, config_name: str, expected: str
+) -> None:
+    err = run_with_error(
+        [
+            "tests/test_apps/simple_app/my_app.py",
+            f"--config-path={config_path}",
+            f"--config-name={config_name}",
+            "--cfg=job",
+        ]
+    )
+    assert expected in err
+    assert "Traceback (most recent call last)" not in err
+
+
+@mark.parametrize(
     "cmd_base",
     [["tests/test_apps/simple_app/my_app.py", "hydra/hydra_logging=disabled"]],
 )

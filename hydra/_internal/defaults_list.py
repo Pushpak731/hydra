@@ -50,6 +50,7 @@ class Overrides:
     config_overrides: List[Override]
 
     known_choices: Dict[str, Optional[str]]
+    known_choice_origins: Dict[str, Optional[str]]
     known_choices_per_group: Dict[str, Set[str]]
 
     deletions: Dict[str, Deletion]
@@ -62,6 +63,7 @@ class Overrides:
         self.deletions = {}
 
         self.known_choices = {}
+        self.known_choice_origins = {}
         self.known_choices_per_group = {}
 
         for override in overrides_list:
@@ -200,17 +202,33 @@ class Overrides:
                 msg = f"Could not delete '{desc}'. No match in the defaults list"
                 raise ConfigCompositionException(msg)
 
-    def set_known_choice(self, default: InputDefault) -> None:
+    def set_known_choice(
+        self, default: InputDefault, containing_config_path: Optional[str]
+    ) -> None:
         if isinstance(default, GroupDefault):
             key = default.get_override_key()
+            origin = (
+                "command line"
+                if default.is_external_append()
+                else containing_config_path
+            )
             if key not in self.known_choices:
                 self.known_choices[key] = default.get_name()
+                self.known_choice_origins[key] = origin
             else:
                 prev = self.known_choices[key]
                 if default.get_name() != prev:
+                    previous_origin = self.known_choice_origins[key]
+                    previous_choice = f"'{prev}'"
+                    current_choice = f"'{default.get_name()}'"
+                    if previous_origin is not None:
+                        previous_choice += f" from '{previous_origin}'"
+                    if origin is not None:
+                        current_choice += f" from '{origin}'"
                     raise ConfigCompositionException(
                         f"Multiple values for {key}."
                         f" To override a value use 'override {key}: {prev}'"
+                        f"\nConflicting choices: {previous_choice} and {current_choice}"
                     )
 
             group = default.get_group_path()
@@ -323,6 +341,7 @@ def _check_not_missing(
     repo: IConfigRepository,
     default: InputDefault,
     skip_missing: bool,
+    containing_config_path: Optional[str],
 ) -> bool:
     path = default.get_config_path()
     if path.endswith("???"):
@@ -340,6 +359,8 @@ def _check_not_missing(
                 You must specify '{override_key}', e.g, {override_key}=<OPTION>
                 Available options:
                 """)
+            if containing_config_path is not None:
+                msg = f"In '{containing_config_path}': {msg}"
             raise ConfigCompositionException(msg + opt_list)
         elif isinstance(default, ConfigDefault):
             raise ValueError(f"Missing ConfigDefault is not supported : {path}")
@@ -594,12 +615,25 @@ def _create_defaults_tree_impl(
         overrides.delete(parent)
         return root
 
-    overrides.set_known_choice(parent)
+    containing_config = root.parent_node()
+    containing_config_path = (
+        containing_config.get_config_path()
+        if containing_config is not None and not containing_config.is_virtual()
+        else None
+    )
+    overrides.set_known_choice(parent, containing_config_path)
 
     if parent.get_name() is None:
         return root
 
-    if _check_not_missing(repo=repo, default=parent, skip_missing=skip_missing):
+    if _check_not_missing(
+        repo=repo,
+        default=parent,
+        skip_missing=skip_missing,
+        containing_config_path=(
+            None if parent.is_external_append() else containing_config_path
+        ),
+    ):
         return root
 
     path = parent.get_config_path()
