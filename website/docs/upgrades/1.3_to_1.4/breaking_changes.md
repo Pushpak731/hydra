@@ -102,6 +102,12 @@ have been removed:
 
 ## OmegaConf 2.4
 
+- Direct assignment and typed-container mutation warn when they implicitly
+  convert a value to another type. Pass values of the declared type; for an
+  assignment that needs conversion, use `OmegaConf.update()`. Assigning a
+  structured-config object remains unchanged. Configuration loading, merges,
+  and command-line overrides continue to support conversion.
+  See [OmegaConf #459](https://github.com/hydra-ecosystem/omegaconf/issues/459).
 - Python 3.6, 3.7, 3.8, and 3.9 are no longer supported. OmegaConf requires
   Python 3.10 or newer.
 - Native tuples create immutable `TupleConfig` values instead of mutable
