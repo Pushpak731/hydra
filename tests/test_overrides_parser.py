@@ -2411,4 +2411,3 @@ def test_cast_sweep_preserves_tags_and_shuffle() -> None:
     assert val2.tags == {"bar"}
     assert val2.shuffle is True
     assert val2.list == [1, 2]
-
