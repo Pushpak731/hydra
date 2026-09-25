@@ -3,13 +3,13 @@ import sys
 import warnings
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
-from omegaconf.vendor.antlr4 import (  # type: ignore[attr-defined]
+from antlr4 import (  # type: ignore[attr-defined]
     ParserRuleContext,
     TerminalNode,
     Token,
 )
-from omegaconf.vendor.antlr4.error.ErrorListener import ErrorListener
-from omegaconf.vendor.antlr4.tree.Tree import TerminalNodeImpl
+from antlr4.error.ErrorListener import ErrorListener
+from antlr4.tree.Tree import TerminalNodeImpl
 
 from hydra._internal.deprecation_warning import deprecation_warning
 from hydra._internal.grammar.functions import FunctionCall, Functions

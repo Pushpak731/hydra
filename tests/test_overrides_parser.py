@@ -2392,3 +2392,23 @@ def test_sweep_iterators(
 def test_escape_special_characters(s: str, expected: str) -> None:
     escaped = escape_special_characters(s)
     assert escaped == expected
+
+
+def test_cast_sweep_preserves_tags_and_shuffle() -> None:
+    # Test RangeSweep cast preserving tags and shuffle
+    res1 = parser.parse_override("x=float(tag(foo, shuffle(range(1, 10))))")
+    val1 = res1.value()
+    assert isinstance(val1, RangeSweep)
+    assert val1.tags == {"foo"}
+    assert val1.shuffle is True
+    assert val1.start == 1.0
+    assert val1.stop == 10.0
+
+    # Test ChoiceSweep cast preserving tags and shuffle
+    res2 = parser.parse_override("x=int(tag(bar, shuffle(choice(1.5, 2.5))))")
+    val2 = res2.value()
+    assert isinstance(val2, ChoiceSweep)
+    assert val2.tags == {"bar"}
+    assert val2.shuffle is True
+    assert val2.list == [1, 2]
+

@@ -2,7 +2,7 @@
 import sys
 from typing import Any, List, Optional
 
-from omegaconf.vendor.antlr4.error.Errors import (
+from antlr4.error.Errors import (
     LexerNoViableAltException,
     RecognitionException,
 )
